@@ -31,7 +31,7 @@ public class PagesController {
 			System.out.println("Conectado");
 			String sql = " CREATE TABLE Membro" + 
 					" (" + 
-					" id int auto_increment PRIMARY KEY NOT NULL, " + 
+					" id SERIAL PRIMARY KEY NOT NULL, " + 
 					" nome varchar(200) NOT NULL, " + 
 					" senha varchar(300) NOT NULL, " + 
 					" tipo int" + 
