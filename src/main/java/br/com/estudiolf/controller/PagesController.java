@@ -36,10 +36,20 @@ public class PagesController {
 					" senha varchar(300) NOT NULL, " + 
 					" tipo int" + 
 					" )";
+			String sql1 = " CREATE TABLE Ponto" + 
+					" (" + 
+					" id int auto_increment PRIMARY KEY NOT NULL, " + 
+					" id_membro int not null, " + 
+					" inicio datetime, " + 
+					" fim datetime, " + 
+					" editado int," +
+					" foreign key(id_membro) references Membro(id)" + 
+					" )";
 			Statement stmt = con.createStatement();
 			stmt.executeUpdate("DROP TABLE IF EXISTS ticks");
 			stmt.executeUpdate("DROP TABLE IF EXISTS Membro");
 			stmt.executeUpdate(sql);
+			stmt.executeUpdate(sql1);
 			stmt.close();
 			con.close();
 		} catch (SQLException e) {
