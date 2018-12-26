@@ -1,8 +1,8 @@
 package br.com.estudiolf.controller;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,13 +31,15 @@ public class PagesController {
 			System.out.println("Conectado");
 			String sql = " CREATE TABLE Membro" + 
 					" (" + 
-					" id int PRIMARY KEY NOT NULL, " + 
+					" id int auto_increment PRIMARY KEY NOT NULL, " + 
 					" nome varchar(200) NOT NULL, " + 
 					" senha varchar(300) NOT NULL, " + 
 					" tipo int" + 
 					" )";
-			PreparedStatement stmt = con.prepareStatement(sql);
-			stmt.executeQuery();
+			Statement stmt = con.createStatement();
+			stmt.executeUpdate("DROP TABLE IF EXISTS ticks");
+			stmt.executeUpdate("DROP TABLE IF EXISTS Membro");
+			stmt.executeUpdate(sql);
 			stmt.close();
 			con.close();
 		} catch (SQLException e) {
