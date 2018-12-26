@@ -5,13 +5,51 @@
 <title>Tela de cadastro</title>
 </head>
 <body>
-	<center>
-    <p style="font-size: 20px; font-weight: bold;">Sistema da Equipe LF</p>
-    <form action="/sistema.php" method="post">
-        <input type="password" name="senha" placeholder="Senha">&nbsp;
-        <input type="submit" value="Login">
+	<div style="text-align:center;">
+	<h3>Cadastro</h3>
+    <form action="/cadastro" method="post" onsubmit="return checkForm(this);">
+    	<input type="text" name="nome" placeholder="Nome completo" required><br/><br/>
+    	<input type="text" name="username" placeholder="Usuario" required><br/><br/>
+        <input type="password" name="pw1" placeholder="Senha" required><br/><br/>
+        <input type="password" name="pw2" placeholder="Confirmar Senha" required><br/><br/>
+        <input type="submit" value="Cadastrar">
     </form>
-    <p>N&atilde;o possui cadastro? <a href="/cadastro">Clique aqui...</a></p>
-    </center>
+    </div>
+    <script type="text/javascript">
+
+  function checkForm(form)
+  {
+    if(form.username.value == "") {
+      alert("Erro: Usuario deve ser preenchido!");
+      form.username.focus();
+      return false;
+    }
+    re = /^\w+$/;
+    if(!re.test(form.username.value)) {
+      alert("Erro: Usuario deve conter apenas letras, numeros e underlines!");
+      form.username.focus();
+      return false;
+    }
+
+    if(form.pwd1.value != "" && form.pwd1.value == form.pwd2.value) {
+      if(form.pwd1.value.length < 6) {
+        alert("Erro: A senha deve conter ao menos 6 caracteres!");
+        form.pwd1.focus();
+        return false;
+      }
+      if(form.pwd1.value == form.username.value) {
+        alert("Erro: A senha deve ser diferente do usuario!");
+        form.pwd1.focus();
+        return false;
+      }
+    } else {
+      alert("Erro: A senha deve ser igual nos dois campos!");
+      form.pwd1.focus();
+      return false;
+    }
+    return true;
+  }
+
+</script>
 </body>
 </html>
