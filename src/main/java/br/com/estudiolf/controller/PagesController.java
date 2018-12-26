@@ -49,7 +49,7 @@ public class PagesController {
 			stmt.executeUpdate("DROP TABLE IF EXISTS ticks");
 			stmt.executeUpdate("DROP TABLE IF EXISTS Membro");
 			stmt.executeUpdate(sql);
-			stmt.executeUpdate(sql1);
+			//stmt.executeUpdate(sql1);
 			stmt.close();
 			con.close();
 		} catch (SQLException e) {
