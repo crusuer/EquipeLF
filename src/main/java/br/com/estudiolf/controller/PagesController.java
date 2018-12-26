@@ -32,24 +32,24 @@ public class PagesController {
 			String sql = " CREATE TABLE Membro" + 
 					" (" + 
 					" id SERIAL PRIMARY KEY NOT NULL, " + 
-					" nome varchar(200) NOT NULL, " + 
-					" senha varchar(300) NOT NULL, " + 
-					" tipo int" + 
+					" nome VARCHAR (200) NOT NULL, " + 
+					" senha VARCHAR (300) NOT NULL, " + 
+					" tipo INTEGER" + 
 					" )";
 			String sql1 = " CREATE TABLE Ponto" + 
 					" (" + 
-					" id int auto_increment PRIMARY KEY NOT NULL, " + 
-					" id_membro int not null, " + 
-					" inicio datetime, " + 
-					" fim datetime, " + 
-					" editado int," +
+					" id SERIAL PRIMARY KEY NOT NULL, " + 
+					" id_membro INTEGER, " + 
+					" inicio timestamp, " + 
+					" fim timestamp, " + 
+					" editado INTEGER," +
 					" foreign key(id_membro) references Membro(id)" + 
 					" )";
 			Statement stmt = con.createStatement();
-			stmt.executeUpdate("DROP TABLE IF EXISTS ticks");
+			stmt.executeUpdate("DROP TABLE IF EXISTS Ponto");
 			stmt.executeUpdate("DROP TABLE IF EXISTS Membro");
 			stmt.executeUpdate(sql);
-			//stmt.executeUpdate(sql1);
+			stmt.executeUpdate(sql1);
 			stmt.close();
 			con.close();
 		} catch (SQLException e) {
