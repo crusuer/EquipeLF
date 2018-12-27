@@ -10,28 +10,40 @@ import br.com.estudiolf.model.Membro;
 public class MembroDAOImpl implements MembroDAO {
 
 	@Override
-	public void save(Membro membro) {
-		// TODO Auto-generated method stub
+	public void save(Membro m) {
+		String sql = " INSERT INTO Membro (nome,usuario,senha,tipo) VALUES ('" + m.getNome() + "','" + m.getUsuario()
+				+ "','" + m.getSenha() + "','" + m.getTipo() + "')";
 
+		dbQuery(sql);
 	}
 
 	@Override
 	public void drop() {
+
+		String sql = " DROP TABLE IF EXISTS membro";
+
+		dbQuery(sql);
+	}
+
+	private void dbQuery(String sql) {
+		Connection con = ConnectionFactory.getConnection();
+		Statement stmt = null;
 		try {
-			Connection con = ConnectionFactory.getConnection();
-
-			String sql = " DROP TABLE IF EXISTS test";
-			Statement stmt;
-
 			stmt = con.createStatement();
 			stmt.executeUpdate(sql);
-			stmt.close();
-			con.close();
+
 		} catch (SQLException e) {
 
 			e.printStackTrace();
-		}
+		} finally {
+			try {
+				stmt.close();
+				con.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 
+		}
 	}
 
 }

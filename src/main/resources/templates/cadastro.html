@@ -14,22 +14,23 @@
     <link href="signin.css" rel="stylesheet">
   </head>
   <body class="text-center">
-    <form action="/cadastro" method="post" onsubmit="return checkForm(this);" class="form-signin">
+    <form th:object="${membro}" th:action="@{/cadastro}" method="post" class="form-signin">
   <h1 class="h3 mb-3 font-weight-bold">Cadastro</h1>
   <label for="nome" class="sr-only">Nome</label>
-  <input type="text" id="nome" class="form-control" placeholder="Nome Completo" required autofocus>
-  <label for="username" class="sr-only">Usu&aacute;rio</label>
-  <input type="text" id="username" class="form-control" placeholder="Usuário" required autofocus>
-  <label for="password" class="sr-only">Senha</label>
-  <input type="password" id="password" class="form-control" placeholder="Senha" required>
-  <label for="confpassword" class="sr-only">Confirmar Senha</label>
-  <input type="password" id="confpassword" class="form-control" placeholder="Confirmar Senha" required>
-<!--   <div class="checkbox mb-3">
-    <label>
-      <input type="checkbox" value="remember-me"> Lembrar-me
-    </label>
-  </div> -->
+  <input type="text" id="nome" th:field="*{nome}" class="form-control" placeholder="Nome Completo" required autofocus>
+  <label th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}">Name Error</label>
+  <label for="usuario" class="sr-only">Usu&aacute;rio</label>
+  <input type="text" id="usuario" th:field="*{usuario}" class="form-control" placeholder="Usuário" required autofocus>
+  <label th:if="${#fields.hasErrors('usuario')}" th:errors="*{usuario}">User Error</label>
+  <label for="senha" class="sr-only">Senha</label>
+  <input type="password" id="senha" th:field="*{senha}" class="form-control" placeholder="Senha" required>
+  <label th:if="${#fields.hasErrors('senha')}" th:errors="*{senha}">Pass Error</label>
+  <label for="confsenha" class="sr-only">Confirmar Senha</label>
+  <input type="password" id="confsenha" th:field="*{confsenha}" class="form-control" placeholder="Confirmar Senha" required>
+  <label th:if="${#fields.hasErrors('confsenha')}" th:errors="*{confsenha}">Pass Error</label>
+  <input type="text" id="tipo" name="tipo" th:value="1" style="display:none;">
   <button class="btn btn-lg btn-primary btn-block" type="submit">Cadastrar</button>
+  <a class="btn btn-lg btn-danger btn-block" href="/">Cancelar</a>
 </form>
 </body>
 </html>
