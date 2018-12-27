@@ -1,7 +1,6 @@
 package br.com.estudiolf.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -16,15 +15,14 @@ public class PagesController {
 	}
 
 	@RequestMapping(value = "/cadastro", method = RequestMethod.GET)
-	public String cadastro(Model model) {
-		model.addAttribute("DBS",System.getenv("JDBC_DATABASE_URL"));
+	public String cadastro() {
 		return "cadastro";
 	}
 
 	@RequestMapping(value = "/cadastro", method = RequestMethod.POST)
 	public String cadastroPost() {
 		MembroDAOImpl dao = new MembroDAOImpl();
-		//dao.drop();
+		dao.drop();
 		
 		return "index";
 	}

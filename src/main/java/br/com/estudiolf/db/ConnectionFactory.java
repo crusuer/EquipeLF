@@ -8,7 +8,8 @@ public class ConnectionFactory {
 
 	public static Connection getConnection() {
 		try {
-			String dbUrl = System.getenv("JDBC_DATABASE_URL");
+			// System.getenv("JDBC_DATABASE_URL");
+			final String dbUrl = "jdbc:postgresql://ec2-54-247-125-116.eu-west-1.compute.amazonaws.com:5432/d9bb8kmgv0vekg?user=xwbcoowsjsdgxi&password=49b1d4650e21ec803d8172614a2f04515b506fcdedd80a715bb66a0a8c8ed2a1&sslmode=require&ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory";
 			return DriverManager.getConnection(dbUrl);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
