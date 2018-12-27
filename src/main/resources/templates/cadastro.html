@@ -1,55 +1,36 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="ISO-8859-1">
-<title>Tela de cadastro</title>
-</head>
-<body>
-	<div style="text-align:center;">
-	<h3>Cadastro</h3>
-    <form action="/cadastro" method="post" onsubmit="return checkForm(this);">
-    	<input type="text" name="nome" placeholder="Nome completo" required><br/><br/>
-    	<input type="text" name="username" placeholder="Usuario" required><br/><br/>
-        <input type="password" name="pw1" placeholder="Senha" required><br/><br/>
-        <input type="password" name="pw2" placeholder="Confirmar Senha" required><br/><br/>
-        <input type="submit" value="Cadastrar">
-    </form>
-    </div>
-    <script type="text/javascript">
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <title>Tela de cadastro</title>
 
-  function checkForm(form)
-  {
-    if(form.username.value == "") {
-      alert("Erro: Usuario deve ser preenchido!");
-      form.username.focus();
-      return false;
-    }
-    re = /^\w+$/;
-    if(!re.test(form.username.value)) {
-      alert("Erro: Usuario deve conter apenas letras, numeros e underlines!");
-      form.username.focus();
-      return false;
-    }
+    <!-- Bootstrap core CSS -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="signin.css">
 
-    if(form.pwd1.value != "" && form.pwd1.value == form.pwd2.value) {
-      if(form.pwd1.value.length < 6) {
-        alert("Erro: A senha deve conter ao menos 6 caracteres!");
-        form.pwd1.focus();
-        return false;
-      }
-      if(form.pwd1.value == form.username.value) {
-        alert("Erro: A senha deve ser diferente do usuario!");
-        form.pwd1.focus();
-        return false;
-      }
-    } else {
-      alert("Erro: A senha deve ser igual nos dois campos!");
-      form.pwd1.focus();
-      return false;
-    }
-    return true;
-  }
-
-</script>
+    <!-- Custom styles for this template -->
+    <link href="signin.css" rel="stylesheet">
+  </head>
+  <body class="text-center">
+    <form action="/cadastro" method="post" onsubmit="return checkForm(this);" class="form-signin">
+  <h1 class="h3 mb-3 font-weight-bold"><span th:text="'URL ' +${DBS}"></span></h1>
+  <h1 class="h3 mb-3 font-weight-bold">Cadastro</h1>
+  <label for="nome" class="sr-only">Nome</label>
+  <input type="text" id="nome" class="form-control" placeholder="Nome Completo" required autofocus>
+  <label for="username" class="sr-only">Usu&aacute;rio</label>
+  <input type="text" id="username" class="form-control" placeholder="Usuário" required autofocus>
+  <label for="password" class="sr-only">Senha</label>
+  <input type="password" id="password" class="form-control" placeholder="Senha" required>
+  <label for="confpassword" class="sr-only">Confirmar Senha</label>
+  <input type="password" id="confpassword" class="form-control" placeholder="Confirmar Senha" required>
+<!--   <div class="checkbox mb-3">
+    <label>
+      <input type="checkbox" value="remember-me"> Lembrar-me
+    </label>
+  </div> -->
+  <button class="btn btn-lg btn-primary btn-block" type="submit">Cadastrar</button>
+</form>
 </body>
 </html>

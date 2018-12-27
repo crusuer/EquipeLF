@@ -1,14 +1,11 @@
 package br.com.estudiolf.controller;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
-
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import br.com.estudiolf.db.ConnectionFactory;
+import br.com.estudiolf.dao.MembroDAOImpl;
 
 @Controller
 public class PagesController {
@@ -19,42 +16,16 @@ public class PagesController {
 	}
 
 	@RequestMapping(value = "/cadastro", method = RequestMethod.GET)
-	public String cadastro() {
+	public String cadastro(Model model) {
+		model.addAttribute("DBS",System.getenv("JDBC_DATABASE_URL"));
 		return "cadastro";
 	}
 
 	@RequestMapping(value = "/cadastro", method = RequestMethod.POST)
 	public String cadastroPost() {
-		try {
-			Connection con = ConnectionFactory.getConnection();
-			
-			System.out.println("Conectado");
-			String sql = " CREATE TABLE Membro" + 
-					" (" + 
-					" id SERIAL PRIMARY KEY NOT NULL, " + 
-					" nome VARCHAR (200) NOT NULL, " + 
-					" senha VARCHAR (300) NOT NULL, " + 
-					" tipo INTEGER" + 
-					" )";
-			String sql1 = " CREATE TABLE Ponto" + 
-					" (" + 
-					" id SERIAL PRIMARY KEY NOT NULL, " + 
-					" id_membro INTEGER, " + 
-					" inicio timestamp, " + 
-					" fim timestamp, " + 
-					" editado INTEGER," +
-					" foreign key(id_membro) references Membro(id)" + 
-					" )";
-			Statement stmt = con.createStatement();
-			stmt.executeUpdate("DROP TABLE IF EXISTS Ponto");
-			stmt.executeUpdate("DROP TABLE IF EXISTS Membro");
-			stmt.executeUpdate(sql);
-			stmt.executeUpdate(sql1);
-			stmt.close();
-			con.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		MembroDAOImpl dao = new MembroDAOImpl();
+		//dao.drop();
+		
 		return "index";
 	}
 }

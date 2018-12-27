@@ -1,17 +1,32 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="ISO-8859-1">
-<title>Tela inicial</title>
-</head>
-<body>
-	<center>
-    <p style="font-size: 20px; font-weight: bold;">Sistema da Equipe LF</p>
-    <form action="/cadastro" method="get">
-        <input type="password" name="senha" placeholder="Senha">&nbsp;
-        <input type="submit" value="Login">
-    </form>
-    <p>N&atilde;o possui cadastro? <a href="/cadastro">Clique aqui...</a></p>
-    </center>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <title>Tela inicial</title>
+
+    <!-- Bootstrap core CSS -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="signin.css">
+
+    <!-- Custom styles for this template -->
+    <link href="signin.css" rel="stylesheet">
+  </head>
+  <body class="text-center">
+    <form class="form-signin">
+  <h1 class="h3 mb-3 font-weight-bold">Sistema da Equipe LF</h1>
+  <label for="username" class="sr-only">Usu&aacute;rio</label>
+  <input type="text" id="username" class="form-control" placeholder="Usuário" required autofocus>
+  <label for="password" class="sr-only">Senha</label>
+  <input type="password" id="password" class="form-control" placeholder="Senha" required>
+<!--   <div class="checkbox mb-3">
+    <label>
+      <input type="checkbox" value="remember-me"> Lembrar-me
+    </label>
+  </div> -->
+  <button class="btn btn-lg btn-primary btn-block" type="submit">Entrar</button>
+  <p class="lead">N&atilde;o possui cadastro? <a href="/cadastro">Clique aqui...</a></p>
+</form>
 </body>
 </html>
