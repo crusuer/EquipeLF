@@ -49,10 +49,10 @@ public class PagesController {
 		} else {
 			membro.setSenha(encrypt(membro.getSenha()));
 			membro.setConfsenha(encrypt(membro.getConfsenha()));
-			
+
 			if (!membro.getSenha().equals(membro.getConfsenha())) {
 				return "cadastro";
-			}			
+			}
 			dao.save(membro);
 
 			return "index";
@@ -68,7 +68,7 @@ public class PagesController {
 		String pass = encrypt(password);
 
 		if (dao.find(username, pass)) {
-			List<Ponto> pontos = daoPonto.findByUser(username);			
+			List<Ponto> pontos = daoPonto.findByUser(username);
 			model.addAttribute("username", username);
 			model.addAttribute("password", password);
 			model.addAttribute("pontos", pontos);
@@ -77,13 +77,16 @@ public class PagesController {
 
 		return "index";
 	}
-	
+
 	@RequestMapping("/marca")
 	public String userMarca(@RequestParam(name = "username") String username,
 			@RequestParam(name = "password") String password, Model model) throws SQLException {
-		daoPonto.save(username);
+		if (!daoPonto.update(username)) {
+			daoPonto.save(username);
+		}
+
 		model.addAttribute("user", username);
-		return userPost(username,password,model);
+		return userPost(username, password, model);
 	}
 
 	public String encrypt(String senha) {

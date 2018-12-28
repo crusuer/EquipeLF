@@ -8,4 +8,5 @@ public interface PontoDAO {
 
 	public List<Ponto> findByUser(String user);
 	public void save(String user);
+	public boolean update(String user);
 }

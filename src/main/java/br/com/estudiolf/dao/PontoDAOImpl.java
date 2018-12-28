@@ -90,4 +90,42 @@ public class PontoDAOImpl implements PontoDAO {
 		}
 	}
 
+	@Override
+	public boolean update(String user) {
+		Connection con = ConnectionFactory.getConnection();
+		Statement stmt = null;
+		try {
+			Date now = new Date();
+			sdfDate.setTimeZone(TimeZone.getTimeZone("America/Sao_Paulo"));
+			sdfTime.setTimeZone(TimeZone.getTimeZone("America/Sao_Paulo"));
+			String sql = " select usuario from ponto where usuario='" + user + "' and dia='" + sdfDate.format(now) + "' ";
+
+			stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(sql);
+
+			if (rs.next()) {
+				stmt.close();
+				con.close();
+				stmt = con.createStatement();
+				stmt.executeUpdate(" update ponto set fim='" + sdfTime.format(now) + "' where usuario='" + user
+						+ "' and dia='" + sdfDate.format(now) + "' ");
+			}
+
+			rs.close();
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		} finally {
+			try {
+				stmt.close();
+				con.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
+		}
+		return false;
+	}
+
 }
