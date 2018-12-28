@@ -105,7 +105,6 @@ public class PontoDAOImpl implements PontoDAO {
 
 			if (rs.next()) {
 				stmt.close();
-				con.close();
 				stmt = con.createStatement();
 				stmt.executeUpdate(" update ponto set fim='" + sdfTime.format(now) + "' where usuario='" + user
 						+ "' and dia='" + sdfDate.format(now) + "' ");
