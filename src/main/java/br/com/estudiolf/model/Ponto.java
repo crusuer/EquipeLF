@@ -53,11 +53,7 @@ public class Ponto {
 		this.editado = editado;
 	}
 
-	public String getTotal() {
-		return total;
-	}
-
-	public void setTotal(String total) throws ParseException {
+	public String getTotal() throws ParseException {
 		if (fim.isEmpty()) {
 
 			SimpleDateFormat format = new SimpleDateFormat("HH:mm");
@@ -69,9 +65,14 @@ public class Ponto {
 			long hours = (diff / 3600);
 			long mins = (diff / 60) % 60;
 			String minsString = (mins == 0) ? "00" : ((mins < 10) ? "0" + mins : "" + mins);
-			this.total = hours + ":" + minsString;
+			return hours + ":" + minsString;
 		}
 		this.total = "";
+		return total;
+	}
+
+	public void setTotal(String total) {
+		this.total = total;
 	}
 
 }
