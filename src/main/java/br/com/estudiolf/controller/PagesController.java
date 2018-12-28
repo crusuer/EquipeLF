@@ -80,10 +80,10 @@ public class PagesController {
 	
 	@RequestMapping("/marca")
 	public String userMarca(@RequestParam(name = "username") String username,
-			@RequestParam(name = "password") String password, Model model) {
+			@RequestParam(name = "password") String password, Model model) throws SQLException {
 		daoPonto.save(username);
 		model.addAttribute("user", username);
-		return "user?username=" + username + "&password=" + password;
+		return userPost(username,password,model);
 	}
 
 	public String encrypt(String senha) {
