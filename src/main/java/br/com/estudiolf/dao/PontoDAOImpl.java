@@ -19,13 +19,20 @@ public class PontoDAOImpl implements PontoDAO {
 	SimpleDateFormat sdfDate = new SimpleDateFormat("dd/MM/yyyy");
 	SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm");
 
+	public PontoDAOImpl() {
+		sdfDate.setTimeZone(TimeZone.getTimeZone("America/Sao_Paulo"));
+		sdfTime.setTimeZone(TimeZone.getTimeZone("America/Sao_Paulo"));
+	}
+
 	@Override
 	public List<Ponto> findByUser(String user) {
 		Connection con = ConnectionFactory.getConnection();
 		Statement stmt = null;
 		List<Ponto> pontos = new ArrayList<>();
 		try {
-			String sql = " select id,dia,inicio,fim,editado from ponto where usuario='" + user + "' ";
+			Date now = new Date();
+			String sql = " select id,dia,inicio,fim,editado from ponto where usuario='" + user + "' and dia like '__"
+					+ sdfDate.format(now).substring(2) + "' ";
 
 			stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery(sql);
@@ -68,8 +75,6 @@ public class PontoDAOImpl implements PontoDAO {
 		Statement stmt = null;
 		try {
 			Date now = new Date();
-			sdfDate.setTimeZone(TimeZone.getTimeZone("America/Sao_Paulo"));
-			sdfTime.setTimeZone(TimeZone.getTimeZone("America/Sao_Paulo"));
 			String sql = " insert into ponto (usuario, dia, inicio, fim) VALUES ('" + user + "','" + sdfDate.format(now)
 					+ "','" + sdfTime.format(now) + "','')";
 
@@ -96,9 +101,9 @@ public class PontoDAOImpl implements PontoDAO {
 		Statement stmt = null;
 		try {
 			Date now = new Date();
-			sdfDate.setTimeZone(TimeZone.getTimeZone("America/Sao_Paulo"));
-			sdfTime.setTimeZone(TimeZone.getTimeZone("America/Sao_Paulo"));
-			String sql = " select usuario from ponto where usuario='" + user + "' and dia='" + sdfDate.format(now) + "' ";
+
+			String sql = " select usuario from ponto where usuario='" + user + "' and dia='" + sdfDate.format(now)
+					+ "' ";
 
 			stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery(sql);
