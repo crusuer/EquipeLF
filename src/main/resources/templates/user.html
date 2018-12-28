@@ -21,7 +21,7 @@
 						<th>In&iacute;cio</th>
 						<th>Fim</th>
 						<th>Total</th>
-						<th>Ajustar</th>
+						<th style="display:none;">Ajustar</th>
 					</tr>
 				</thead>
 				<tr th:each="ponto : ${pontos}">
@@ -30,7 +30,7 @@
 					<td th:text="${ponto.inicio}"></td>
 					<td th:text="${ponto.fim}"></td>
 					<td th:text="${ponto.total}"></td>
-					<td class="btn-group pull-right">
+					<td class="btn-group pull-right"  style="display:none;">
 					<a class="btn btn-sm btn-primary" th:href="@{/edit/{id}(id=${ponto.id})}" >Editar</a>
 					</td>
 				</tr>
