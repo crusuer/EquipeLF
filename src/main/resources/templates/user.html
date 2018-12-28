@@ -42,7 +42,11 @@
 						href="#"><span class="glyphicon glyphicon-edit"></span> Editar</a></td>
 				</tr>
 			</table>
-			<button class="btn btn-lg btn-primary btn-block" type="submit">Marcar</button>
+			<form action="/marca" method="post">
+				<input type="text" name="username" th:value="${username}" style="display:none;">
+				<input type="text" name="password" th:value="${password}" style="display:none;">
+				<button class="btn btn-lg btn-primary btn-block" type="submit">Marcar</button>
+			</form>			
 			<a class="btn btn-lg btn-danger btn-block" href="/">Sair</a>
 	</div>
 </body>

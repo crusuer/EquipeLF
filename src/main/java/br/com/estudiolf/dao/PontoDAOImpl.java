@@ -4,13 +4,18 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import br.com.estudiolf.db.ConnectionFactory;
 import br.com.estudiolf.model.Ponto;
 
 public class PontoDAOImpl implements PontoDAO {
+
+	SimpleDateFormat sdfDate = new SimpleDateFormat("dd/MM/yyyy");
+	SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm");
 
 	@Override
 	public List<Ponto> findByUser(String user) {
@@ -48,6 +53,32 @@ public class PontoDAOImpl implements PontoDAO {
 		}
 		return pontos;
 
+	}
+
+	@Override
+	public void save(String user) {
+		Connection con = ConnectionFactory.getConnection();
+		Statement stmt = null;
+		try {
+			Date now = new Date();
+			String sql = " insert into ponto (usuario, dia, inicio, fim) VALUES ('" + user + "','" + sdfDate.format(now)
+					+ "','" + sdfTime.format(now) + "','23:59')";
+
+			stmt = con.createStatement();
+			stmt.executeUpdate(sql);
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		} finally {
+			try {
+				stmt.close();
+				con.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
+		}
 	}
 
 }

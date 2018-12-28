@@ -77,6 +77,14 @@ public class PagesController {
 
 		return "index";
 	}
+	
+	@RequestMapping("/marca")
+	public String userMarca(@RequestParam(name = "username") String username,
+			@RequestParam(name = "password") String password, Model model) {
+		daoPonto.save(username);
+		model.addAttribute("user", username);
+		return "user?username=" + username + "&password=" + password;
+	}
 
 	public String encrypt(String senha) {
 		StringBuilder s = new StringBuilder();

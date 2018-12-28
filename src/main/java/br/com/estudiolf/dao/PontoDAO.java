@@ -7,4 +7,5 @@ import br.com.estudiolf.model.Ponto;
 public interface PontoDAO {
 
 	public List<Ponto> findByUser(String user);
+	public void save(String user);
 }
