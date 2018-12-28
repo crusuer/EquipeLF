@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="ISO-8859-1">
 <title>Tela de consulta</title>
@@ -19,7 +19,7 @@
 </style>
 </head>
 <body>
-	<div class="container text-center">
+	<div class="text-center">
 		<h1 class="h3 mb-3 font-weight-bold">Marca&ccedil;&otilde;es</h1>
 			<table class="table table-striped custab">
 				<thead>
@@ -32,29 +32,11 @@
 						<th class="text-center">Ajustar Hor&aacute;rio</th>
 					</tr>
 				</thead>
-				<tr>
-					<td>1</td>
-					<td>17/12/2018</td>
-					<td>19:01</td>
-					<td>22:03</td>
-					<td>03:02</td>
-					<td class="text-center"><a class='btn btn-info btn-xs'
-						href="#"><span class="glyphicon glyphicon-edit"></span> Editar</a></td>
-				</tr>
-				<tr>
-					<td>2</td>
-					<td>18/12/2018</td>
-					<td>19:04</td>
-					<td>22:00</td>
-					<td>02:56</td>
-					<td class="text-center"><a class='btn btn-info btn-xs'
-						href="#"><span class="glyphicon glyphicon-edit"></span> Editar</a></td>
-				</tr>
-				<tr>
-					<td>3</td>
-					<td>19/12/2018</td>
-					<td>19:00</td>
-					<td>22:02</td>
+				<tr th:each="ponto : ${pontos}">
+					<td th:text="${ponto.id}"></td>
+					<td th:text="${ponto.dia}"></td>
+					<td th:text="${ponto.inicio}"></td>
+					<td th:text="${ponto.fim}"></td>
 					<td>03:02</td>
 					<td class="text-center"><a class='btn btn-info btn-xs'
 						href="#"><span class="glyphicon glyphicon-edit"></span> Editar</a></td>

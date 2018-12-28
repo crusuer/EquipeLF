@@ -2,8 +2,8 @@ package br.com.estudiolf.controller;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -15,12 +15,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import br.com.estudiolf.dao.MembroDAOImpl;
+import br.com.estudiolf.dao.PontoDAOImpl;
 import br.com.estudiolf.model.Membro;
+import br.com.estudiolf.model.Ponto;
 
 @Controller
 public class PagesController {
 
 	MembroDAOImpl dao = new MembroDAOImpl();
+	PontoDAOImpl daoPonto = new PontoDAOImpl();
 
 	@RequestMapping("/")
 	public String index() {
@@ -65,7 +68,10 @@ public class PagesController {
 		String pass = encrypt(password);
 
 		if (dao.find(username, pass)) {
-			model.addAttribute("user", username);
+			List<Ponto> pontos = daoPonto.findByUser(username);			
+			model.addAttribute("username", username);
+			model.addAttribute("password", password);
+			model.addAttribute("pontos", pontos);
 			return "user";
 		}
 

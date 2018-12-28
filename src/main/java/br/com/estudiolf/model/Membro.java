@@ -11,10 +11,10 @@ public class Membro {
 	@NotNull
 	private String usuario;
 	@NotNull
-	@Size(min = 6)
+	@Size(min = 6, max = 50)
 	private String senha;
 	@NotNull
-	@Size(min = 6)
+	@Size(min = 6, max = 50)
 	private String confsenha;
 	@Min(1)
 	private int tipo;
