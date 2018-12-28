@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import br.com.estudiolf.db.ConnectionFactory;
 import br.com.estudiolf.model.Ponto;
@@ -67,6 +68,8 @@ public class PontoDAOImpl implements PontoDAO {
 		Statement stmt = null;
 		try {
 			Date now = new Date();
+			sdfDate.setTimeZone(TimeZone.getTimeZone("America/Sao_Paulo"));
+			sdfTime.setTimeZone(TimeZone.getTimeZone("America/Sao_Paulo"));
 			String sql = " insert into ponto (usuario, dia, inicio, fim) VALUES ('" + user + "','" + sdfDate.format(now)
 					+ "','" + sdfTime.format(now) + "','')";
 
