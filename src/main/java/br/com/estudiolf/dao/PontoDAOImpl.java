@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,6 +36,11 @@ public class PontoDAOImpl implements PontoDAO {
 				ponto.setInicio(rs.getString("inicio"));
 				ponto.setFim(rs.getString("fim"));
 				ponto.setEditado(rs.getInt("editado"));
+				try {
+					ponto.setTotal();
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
 				pontos.add(ponto);
 			}
 			rs.close();
