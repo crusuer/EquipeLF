@@ -24,20 +24,20 @@
 			<table class="table table-striped custab">
 				<thead>
 					<tr>
-						<th>ID</th>
+						<th style="display:none;">ID</th>
 						<th>Data</th>
 						<th>In&iacute;cio</th>
 						<th>Fim</th>
 						<th>Total</th>
-						<th class="text-center">Ajustar Hor&aacute;rio</th>
+						<th class="text-center" style="display:none;">Ajustar Hor&aacute;rio</th>
 					</tr>
 				</thead>
 				<tr th:each="ponto : ${pontos}">
-					<td th:text="${ponto.id}"></td>
+					<td th:text="${ponto.id}" style="display:none;"></td>
 					<td th:text="${ponto.dia}"></td>
 					<td th:text="${ponto.inicio}"></td>
 					<td th:text="${ponto.fim}"></td>
-					<td>03:02</td>
+					<td th:text="${ponto.total}"></td>
 					<td class="text-center"><a class='btn btn-info btn-xs'
 						href="#"><span class="glyphicon glyphicon-edit"></span> Editar</a></td>
 				</tr>

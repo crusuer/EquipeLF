@@ -62,7 +62,7 @@ public class PontoDAOImpl implements PontoDAO {
 		try {
 			Date now = new Date();
 			String sql = " insert into ponto (usuario, dia, inicio, fim) VALUES ('" + user + "','" + sdfDate.format(now)
-					+ "','" + sdfTime.format(now) + "','23:59')";
+					+ "','" + sdfTime.format(now) + "','')";
 
 			stmt = con.createStatement();
 			stmt.executeUpdate(sql);
