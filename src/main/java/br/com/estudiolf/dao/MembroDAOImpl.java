@@ -15,8 +15,8 @@ public class MembroDAOImpl implements MembroDAO {
 		Connection con = ConnectionFactory.getConnection();
 		Statement stmt = null;
 		try {
-			String sql = " INSERT INTO Membro (nome,usuario,senha,tipo) VALUES ('" + m.getNome() + "','" + m.getUsuario()
-			+ "','" + m.getSenha() + "','" + m.getTipo() + "')";
+			String sql = " INSERT INTO Membro (nome,usuario,senha,habilitado,tipo) VALUES ('" + m.getNome() + "','" + m.getUsuario()
+			+ "','" + m.getSenha() + "',true,'" + m.getTipo() + "')";
 			
 			stmt = con.createStatement();
 			stmt.executeUpdate(sql);

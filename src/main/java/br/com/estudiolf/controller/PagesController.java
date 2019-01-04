@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,7 +27,15 @@ public class PagesController {
 	MembroDAOImpl dao = new MembroDAOImpl();
 	PontoDAOImpl daoPonto = new PontoDAOImpl();
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
 	@RequestMapping("/")
+	public String home() {
+		return "index";
+	}
+
+	@RequestMapping("/index")
 	public String index() {
 		return "index";
 	}
@@ -47,46 +57,35 @@ public class PagesController {
 		if (result.hasErrors()) {
 			return "cadastro";
 		} else {
-			membro.setSenha(encrypt(membro.getSenha()));
-			membro.setConfsenha(encrypt(membro.getConfsenha()));
-
-			if (!membro.getSenha().equals(membro.getConfsenha())) {
-				return "cadastro";
-			}
+			membro.setSenha(passwordEncoder.encode(membro.getSenha()));
 			dao.save(membro);
 
 			return "index";
 		}
 	}
 
+	@RequestMapping(value = "/admin")
+	public String admin() {
+		return "admin";
+	}
+
 	@RequestMapping("/user")
-	public String userPost(@RequestParam(name = "username", required = false) String username,
-			@RequestParam(name = "password", required = false) String password, Model model) throws SQLException {
-		if (username == null || password == null) {
-			return "index";
-		}
-		String pass = encrypt(password);
+	public String userPost(@RequestParam(name = "username", required = false) String username, Model model)
+			throws SQLException {
+		System.out.println("********* "+username);
 
-		if (dao.find(username, pass)) {
-			List<Ponto> pontos = daoPonto.findByUser(username);
-			model.addAttribute("username", username);
-			model.addAttribute("password", password);
-			model.addAttribute("pontos", pontos);
-			return "user";
-		}
+		List<Ponto> pontos = daoPonto.findByUser(username);
+		model.addAttribute("pontos", pontos);
+		return "user";
 
-		return "index";
 	}
 
 	@RequestMapping("/marca")
-	public String userMarca(@RequestParam(name = "username") String username,
-			@RequestParam(name = "password") String password, Model model) throws SQLException {
+	public String userMarca(@RequestParam(name = "username") String username, Model model) throws SQLException {
 		if (!daoPonto.update(username)) {
 			daoPonto.save(username);
 		}
-
-		model.addAttribute("user", username);
-		return userPost(username, password, model);
+		return "user";
 	}
 
 	public String encrypt(String senha) {

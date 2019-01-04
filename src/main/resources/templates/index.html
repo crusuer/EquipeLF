@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -7,21 +9,19 @@
 
     <!-- Bootstrap core CSS -->
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="signin.css">
+<link rel="stylesheet" type="text/css" href="css/signin.css">
 
   </head>
   <body class="text-center">
-    <form action="/user" method="post" class="form-signin">
+  <form th:action="@{/index}" method="post" class="form-signin">
   <h1 class="h3 mb-3 font-weight-bold">Sistema da Equipe LF</h1>
+  <div th:if="${param.error}">
+	<p style="color: red">UserName or PassWord is wrong. Please	check again!</p>
+	</div>
   <label for="username" class="sr-only">Usu&aacute;rio</label>
-  <input type="text" name="username" class="form-control" placeholder="Usuário" required autofocus>
+  <input type="text" id="username" name="username" class="form-control" placeholder="Usuário" required autofocus>
   <label for="password" class="sr-only">Senha</label>
-  <input type="password" name="password" class="form-control" placeholder="Senha" required>
-<!--   <div class="checkbox mb-3">
-    <label>
-      <input type="checkbox" value="remember-me"> Lembrar-me
-    </label>
-  </div> -->
+  <input type="password" id="password" name="password" class="form-control" placeholder="Senha" required>
   <button class="btn btn-lg btn-primary btn-block" type="submit">Entrar</button>
   <p class="lead">N&atilde;o possui cadastro? <a href="/cadastro">Clique aqui...</a></p>
 </form>

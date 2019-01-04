@@ -7,7 +7,7 @@
 
     <!-- Bootstrap core CSS -->
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="signin.css">
+<link rel="stylesheet" type="text/css" href="css/signin.css">
 
   </head>
   <body class="text-center">
@@ -20,14 +20,24 @@
   <input type="text" id="usuario" th:field="*{usuario}" class="form-control" placeholder="Usuário" required autofocus>
   <label th:if="${#fields.hasErrors('usuario')}" th:errors="*{usuario}">User Error</label>
   <label for="senha" class="sr-only">Senha</label>
-  <input type="password" id="senha" th:field="*{senha}" class="form-control" placeholder="Senha" required>
+  <input type="password" id="senha" name="senha" th:field="*{senha}" class="form-control" placeholder="Senha" onkeyup='check_pass();' required>
   <label th:if="${#fields.hasErrors('senha')}" th:errors="*{senha}">Pass Error</label>
   <label for="confsenha" class="sr-only">Confirmar Senha</label>
-  <input type="password" id="confsenha" th:field="*{confsenha}" class="form-control" placeholder="Confirmar Senha" required>
+  <input type="password" id="confsenha" name="confsenha" th:field="*{confsenha}" class="form-control" placeholder="Confirmar Senha" onkeyup='check_pass();' required>
   <label th:if="${#fields.hasErrors('confsenha')}" th:errors="*{confsenha}">Pass Error</label>
-  <input type="text" id="tipo" name="tipo" th:value="1" style="display:none;">
-  <button class="btn btn-lg btn-primary btn-block" type="submit">Cadastrar</button>
+  <input type="text" id="tipo" name="tipo" th:value="ROLE_USER" style="display:none;">
+  <button class="btn btn-lg btn-primary btn-block" id="submit" name="submit" type="submit" disabled>Cadastrar</button>
   <a class="btn btn-lg btn-danger btn-block" href="/">Cancelar</a>
 </form>
+<script type="text/javascript">
+function check_pass() {
+    if (document.getElementById('senha').value ==
+            document.getElementById('confsenha').value) {
+        document.getElementById('submit').disabled = false;
+    } else {
+        document.getElementById('submit').disabled = true;
+    }
+}
+</script>
 </body>
 </html>

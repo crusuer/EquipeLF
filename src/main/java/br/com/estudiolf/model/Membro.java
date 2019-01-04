@@ -1,6 +1,5 @@
 package br.com.estudiolf.model;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -11,13 +10,13 @@ public class Membro {
 	@NotNull
 	private String usuario;
 	@NotNull
-	@Size(min = 6, max = 50)
+	@Size(min = 6, max = 80)
 	private String senha;
 	@NotNull
-	@Size(min = 6, max = 50)
+	@Size(min = 6, max = 80)
 	private String confsenha;
-	@Min(1)
-	private int tipo;
+	@Size(min = 6, max = 20)
+	private String tipo;
 
 	public String getNome() {
 		return nome;
@@ -51,11 +50,11 @@ public class Membro {
 		this.confsenha = confsenha;
 	}
 
-	public int getTipo() {
+	public String getTipo() {
 		return tipo;
 	}
 
-	public void setTipo(int tipo) {
+	public void setTipo(String tipo) {
 		this.tipo = tipo;
 	}
 

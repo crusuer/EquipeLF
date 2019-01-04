@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -7,12 +9,13 @@
 
     <!-- Bootstrap core CSS -->
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="signin.css">
+<link rel="stylesheet" type="text/css" href="css/signin.css">
 
   </head>
   <body class="text-center">
-    <form action="/marca" method="post" class="form-signin">
-  <h1 class="h3 mb-3 font-weight-bold">Marca&ccedil;&otilde;es</h1>
+  <div class="form-signin">
+    <form th:action="@{/marca}" method="post">
+  <h1 class="h3 mb-3 font-weight-bold">Marca&ccedil;&otilde;es de <span sec:authentication="name"></span></h1>
   <table class="table table-striped table-bordered">
 				<thead>
 					<tr>
@@ -37,8 +40,10 @@
 			</table>
   <button class="btn btn-lg btn-primary btn-block" type="submit">Marcar</button>
   <input type="text" name="username" th:value="${username}" style="display:none;">
-  <input type="text" name="password" th:value="${password}" style="display:none;">
-  <a class="btn btn-lg btn-danger btn-block" href="/">Sair</a>
 </form>
+<form th:action="@{/logout}" method="post">
+	<input type="submit" value="Sair" class="btn btn-lg btn-danger btn-block" />
+</form>
+</div>
 </body>
 </html>

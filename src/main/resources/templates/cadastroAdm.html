@@ -7,7 +7,7 @@
 
     <!-- Bootstrap core CSS -->
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="signin.css">
+<link rel="stylesheet" type="text/css" href="css/signin.css">
 
     <!-- Custom styles for this template -->
     <link href="signin.css" rel="stylesheet">
@@ -27,7 +27,7 @@
   <label for="confsenha" class="sr-only">Confirmar Senha</label>
   <input type="password" id="confsenha" th:field="*{confsenha}" class="form-control" placeholder="Confirmar Senha" required>
   <label th:if="${#fields.hasErrors('confsenha')}" th:errors="*{confsenha}">Pass Error</label>
-  <input type="text" id="tipo" name="tipo" th:value="3" style="display:none;">
+  <input type="text" id="tipo" name="tipo" th:value="ROLE_ADMIN" style="display:none;">
   <button class="btn btn-lg btn-primary btn-block" type="submit">Cadastrar</button>
   <a class="btn btn-lg btn-danger btn-block" href="/">Cancelar</a>
 </form>
