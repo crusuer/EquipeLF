@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Tela de cadastro</title>
+    <title>Tela de Marcar</title>
 
     <!-- Bootstrap core CSS -->
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet">
@@ -15,7 +15,7 @@
   <body class="text-center">
   <div class="form-signin">
     <form th:action="@{/marca}" method="post">
-  <h1 class="h3 mb-3 font-weight-bold">Marca&ccedil;&otilde;es de <span sec:authentication="name"></span></h1>
+  <h1 class="h3 mb-3 font-weight-bold">Marca&ccedil;&otilde;es</h1>
   <table class="table table-striped table-bordered">
 				<thead>
 					<tr>

@@ -8,13 +8,13 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import br.com.estudiolf.dao.MembroDAOImpl;
 import br.com.estudiolf.dao.PontoDAOImpl;
@@ -70,22 +70,20 @@ public class PagesController {
 	}
 
 	@RequestMapping("/user")
-	public String userPost(@RequestParam(name = "username", required = false) String username, Model model)
-			throws SQLException {
-		System.out.println("********* "+username);
-
-		List<Ponto> pontos = daoPonto.findByUser(username);
+	public String user(Authentication authentication, Model model) throws SQLException {
+		List<Ponto> pontos = daoPonto.findByUser(authentication.getName());
 		model.addAttribute("pontos", pontos);
+		model.addAttribute("username", authentication.getName());
 		return "user";
 
 	}
 
-	@RequestMapping("/marca")
-	public String userMarca(@RequestParam(name = "username") String username, Model model) throws SQLException {
-		if (!daoPonto.update(username)) {
-			daoPonto.save(username);
+	@RequestMapping(value="/marca", method=RequestMethod.POST)
+	public String userMarca(Authentication authentication, Model model) throws SQLException {
+		if (!daoPonto.update(authentication.getName())) {
+			daoPonto.save(authentication.getName());
 		}
-		return "user";
+		return user(authentication,model);
 	}
 
 	public String encrypt(String senha) {
