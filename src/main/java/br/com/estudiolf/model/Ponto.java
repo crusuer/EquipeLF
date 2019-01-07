@@ -10,7 +10,6 @@ public class Ponto {
 	private String dia;
 	private String inicio;
 	private String fim;
-	private Integer editado;
 	private String total;
 
 	public int getId() {
@@ -43,14 +42,6 @@ public class Ponto {
 
 	public void setFim(String fim) {
 		this.fim = fim;
-	}
-
-	public Integer getEditado() {
-		return editado;
-	}
-
-	public void setEditado(Integer editado) {
-		this.editado = editado;
 	}
 
 	public String getTotal() throws ParseException {

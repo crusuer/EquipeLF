@@ -31,7 +31,7 @@ public class PontoDAOImpl implements PontoDAO {
 		List<Ponto> pontos = new ArrayList<>();
 		try {
 			Date now = new Date();
-			String sql = " select id,dia,inicio,fim,editado from ponto where usuario='" + user + "' and dia like '__"
+			String sql = " select id,dia,inicio,fim from ponto where usuario='" + user + "' and dia like '__"
 					+ sdfDate.format(now).substring(2) + "' ";
 
 			stmt = con.createStatement();
@@ -43,7 +43,6 @@ public class PontoDAOImpl implements PontoDAO {
 				ponto.setDia(rs.getString("dia"));
 				ponto.setInicio(rs.getString("inicio"));
 				ponto.setFim(rs.getString("fim"));
-				ponto.setEditado(rs.getInt("editado"));
 				try {
 					ponto.setTotal();
 				} catch (ParseException e) {
@@ -132,6 +131,65 @@ public class PontoDAOImpl implements PontoDAO {
 
 		}
 		return false;
+	}
+
+	@Override
+	public Ponto findOne(String id) {
+		Connection con = ConnectionFactory.getConnection();
+		Statement stmt = null;
+		Ponto ponto = new Ponto();
+		try {
+			String sql = " select id,dia,inicio,fim from ponto where id=" + id;
+
+			stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(sql);
+
+			while (rs.next()) {
+				ponto.setId(rs.getInt("ID"));
+				ponto.setDia(rs.getString("dia"));
+				ponto.setInicio(rs.getString("inicio"));
+				ponto.setFim(rs.getString("fim"));
+			}
+			rs.close();
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		} finally {
+			try {
+				stmt.close();
+				con.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
+		}
+		return ponto;
+	}
+
+	@Override
+	public void updateAdmin(Ponto ponto) {
+		Connection con = ConnectionFactory.getConnection();
+		Statement stmt = null;
+		try {
+			String sql = " update ponto set dia='"+ponto.getDia()+"',inicio='"+ponto.getInicio()+"',fim='"+ponto.getFim()+"' where id="+ponto.getId();
+
+			stmt = con.createStatement();
+			stmt.executeUpdate(sql);
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		} finally {
+			try {
+				stmt.close();
+				con.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
+		}
+		
 	}
 
 }

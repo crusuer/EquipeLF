@@ -29,13 +29,16 @@
   <div class="collapse navbar-collapse" id="navbarsExampleDefault">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link">In&iacute;cio<span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="/admin">In&iacute;cio<span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/admin/usuarios">Usu&aacute;rios</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/admin/relatorios">Relat&oacute;rios</a>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Relat&oacute;rios</a>
+        <div class="dropdown-menu" aria-labelledby="dropdown01">
+          <a class="dropdown-item" href="/admin/relatorios/mensal">Mensal</a>
+        </div>
       </li>
       <li class="nav-item active">
         <a class="nav-link">Marca&ccedil;&otilde;es</a>
@@ -49,7 +52,7 @@
 
 <div class="text-center">
 
-  <div>
+  <div class="container">
     <h1 class="h3 mb-3 font-weight-bold">Marca&ccedil;&otilde;es</h1>
     <form class="form-inline my-2 my-lg-0" th:action="@{/admin/marcacoes}" method="post">
       <input class="form-control mr-sm-2" type="text" id="username" name="username" placeholder="Usuario" aria-label="Usuario">
@@ -64,7 +67,7 @@
     			<th>In&iacute;cio</th>
     			<th>Fim</th>
     			<th>Total</th>
-    			<th style="display:none;">Ajustar</th>
+    			<th></th>
     		</tr>
     	</thead>
     		<tr th:each="ponto : ${pontos}">
@@ -73,8 +76,8 @@
     			<td th:text="${ponto.inicio}"></td>
     			<td th:text="${ponto.fim}"></td>
     			<td th:text="${ponto.total}"></td>
-    			<td class="btn-group pull-right"  style="display:none;">
-    				<a class="btn btn-sm btn-primary" th:href="@{/edit/{id}(id=${ponto.id})}" >Editar</a>
+    			<td>
+    				<a class="btn btn-sm btn-primary" th:href="@{/admin/marcacoes/edit/{id}(id=${ponto.id})}" >Editar</a>
     			</td>
     		</tr>
     	</table>

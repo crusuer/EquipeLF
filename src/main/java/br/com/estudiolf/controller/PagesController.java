@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -86,7 +87,7 @@ public class PagesController {
 		return usuarios(model);
 	}
 
-	@RequestMapping(value = "/admin/relatorios")
+	@RequestMapping(value = "/admin/relatorios/mensal")
 	public String relatorios(Model model) {
 		List<Resumo> resumos = new ArrayList<>();
 		List<Membro> membros = dao.findAll();
@@ -97,13 +98,13 @@ public class PagesController {
 
 			List<Ponto> pontos = daoPonto.findByUser(m.getUsuario());
 			int minutos = 0;
-			for (Ponto p : pontos) {				
+			for (Ponto p : pontos) {
 				try {
-					if(!p.getTotal().isEmpty()) {
+					if (!p.getTotal().isEmpty()) {
 						String[] split = p.getTotal().split(":");
 						minutos += (60 * Integer.parseInt(split[0]) + Integer.parseInt(split[1]));
 					}
-					
+
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
@@ -114,7 +115,7 @@ public class PagesController {
 		}
 
 		model.addAttribute("resumos", resumos);
-		return "admin/relatorios";
+		return "admin/mensal";
 	}
 
 	@RequestMapping(value = "/admin/marcacoes")
@@ -125,6 +126,19 @@ public class PagesController {
 		}
 		model.addAttribute("pontos", pontos);
 		return "admin/marcacoes";
+	}
+
+	@GetMapping(value = "/admin/marcacoes/edit/{id}")
+	public String marcacoesEdit(@PathVariable("id") String id, Model model) {
+		Ponto ponto = daoPonto.findOne(id);
+		model.addAttribute("ponto",ponto);
+		return "admin/update";
+	}
+	
+	@PostMapping(value = "/admin/marcacoes/update")
+	public String marcacoesUpdate(@Valid Ponto ponto, Model model) {
+		daoPonto.updateAdmin(ponto);
+		return marcacoes("", model);
 	}
 
 	@RequestMapping("/user")
