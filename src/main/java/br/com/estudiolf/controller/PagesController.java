@@ -109,7 +109,12 @@ public class PagesController {
 					e.printStackTrace();
 				}
 			}
-			String total = (int) (minutos / 60) + ":" + minutos % 60;
+			
+			String total = (int) (minutos / 60) + ":";
+			if((minutos % 60)<10) {
+				total += "0";
+			}
+			total += (minutos % 60);
 			resumo.setTotal(total);
 			resumos.add(resumo);
 		}
