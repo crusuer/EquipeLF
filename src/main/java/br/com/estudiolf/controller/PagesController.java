@@ -1,7 +1,5 @@
 package br.com.estudiolf.controller;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -13,6 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -66,7 +66,18 @@ public class PagesController {
 
 	@RequestMapping(value = "/admin")
 	public String admin() {
-		return "admin";
+		return "admin/admin";
+	}
+	@RequestMapping(value = "/admin/usuarios")
+	public String usuarios(Model model) {
+		List<Membro> membros = dao.findAll();
+		model.addAttribute("membros", membros);
+		return "admin/usuarios";
+	}
+	@GetMapping("/admin/usuarios/del/{usuario}")
+	public String edit(@PathVariable("usuario") String usuario, Model model) {
+		dao.disable(usuario);
+		return usuarios(model);
 	}
 
 	@RequestMapping("/user")
@@ -84,25 +95,5 @@ public class PagesController {
 			daoPonto.save(authentication.getName());
 		}
 		return user(authentication,model);
-	}
-
-	public String encrypt(String senha) {
-		StringBuilder s = new StringBuilder();
-		try {
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			md.update(senha.getBytes());
-			byte[] hashMd5 = md.digest();
-
-			for (int i = 0; i < hashMd5.length; i++) {
-				int parteAlta = ((hashMd5[i] >> 4) & 0xf) << 4;
-				int parteBaixa = hashMd5[i] & 0xf;
-				if (parteAlta == 0)
-					s.append('0');
-				s.append(Integer.toHexString(parteAlta | parteBaixa));
-			}
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		}
-		return s.toString();
 	}
 }
