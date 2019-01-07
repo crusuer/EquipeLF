@@ -1,6 +1,8 @@
 package br.com.estudiolf.controller;
 
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -15,11 +17,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import br.com.estudiolf.dao.MembroDAOImpl;
 import br.com.estudiolf.dao.PontoDAOImpl;
 import br.com.estudiolf.model.Membro;
 import br.com.estudiolf.model.Ponto;
+import br.com.estudiolf.model.Resumo;
 
 @Controller
 public class PagesController {
@@ -68,16 +72,59 @@ public class PagesController {
 	public String admin() {
 		return "admin/admin";
 	}
+
 	@RequestMapping(value = "/admin/usuarios")
 	public String usuarios(Model model) {
 		List<Membro> membros = dao.findAll();
 		model.addAttribute("membros", membros);
 		return "admin/usuarios";
 	}
+
 	@GetMapping("/admin/usuarios/del/{usuario}")
 	public String edit(@PathVariable("usuario") String usuario, Model model) {
 		dao.disable(usuario);
 		return usuarios(model);
+	}
+
+	@RequestMapping(value = "/admin/relatorios")
+	public String relatorios(Model model) {
+		List<Resumo> resumos = new ArrayList<>();
+		List<Membro> membros = dao.findAll();
+
+		for (Membro m : membros) {
+			Resumo resumo = new Resumo();
+			resumo.setNome(m.getNome());
+
+			List<Ponto> pontos = daoPonto.findByUser(m.getUsuario());
+			int minutos = 0;
+			for (Ponto p : pontos) {				
+				try {
+					if(!p.getTotal().isEmpty()) {
+						String[] split = p.getTotal().split(":");
+						minutos += (60 * Integer.parseInt(split[0]) + Integer.parseInt(split[1]));
+					}
+					
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
+			String total = (int) (minutos / 60) + ":" + minutos % 60;
+			resumo.setTotal(total);
+			resumos.add(resumo);
+		}
+
+		model.addAttribute("resumos", resumos);
+		return "admin/relatorios";
+	}
+
+	@RequestMapping(value = "/admin/marcacoes")
+	public String marcacoes(@RequestParam(value = "username", required = false) String username, Model model) {
+		List<Ponto> pontos = new ArrayList<>();
+		if (username != null) {
+			pontos = daoPonto.findByUser(username);
+		}
+		model.addAttribute("pontos", pontos);
+		return "admin/marcacoes";
 	}
 
 	@RequestMapping("/user")
@@ -89,11 +136,11 @@ public class PagesController {
 
 	}
 
-	@RequestMapping(value="/marca", method=RequestMethod.POST)
+	@RequestMapping(value = "/marca", method = RequestMethod.POST)
 	public String userMarca(Authentication authentication, Model model) throws SQLException {
 		if (!daoPonto.update(authentication.getName())) {
 			daoPonto.save(authentication.getName());
 		}
-		return user(authentication,model);
+		return user(authentication, model);
 	}
 }

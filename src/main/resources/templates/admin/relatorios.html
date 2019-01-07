@@ -28,14 +28,14 @@
 
   <div class="collapse navbar-collapse" id="navbarsExampleDefault">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
+      <li class="nav-item">
         <a class="nav-link">In&iacute;cio<span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/admin/usuarios">Usu&aacute;rios</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/admin/relatorios">Relat&oacute;rios</a>
+      <li class="nav-item active">
+        <a class="nav-link">Relat&oacute;rios</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/admin/marcacoes">Marca&ccedil;&otilde;es</a>
@@ -50,7 +50,19 @@
 <div class="text-center">
 
   <div>
-    <h1 class="h3 mb-3 font-weight-bold">Sistema Administrativo</h1>
+    <h1 class="h3 mb-3 font-weight-bold">Relat&oacute;rio Mensal</h1>
+    <table class="table table-striped table-bordered">
+    	<thead>
+    		<tr>
+    			<th>Nome</th>
+    			<th>Total</th>
+    		</tr>
+    	</thead>
+    		<tr th:each="resumo : ${resumos}">
+    			<td th:text="${resumo.nome}"></td>
+    			<td th:text="${resumo.total}"></td>
+    		</tr>
+    	</table>
   </div>
 
 </div>
