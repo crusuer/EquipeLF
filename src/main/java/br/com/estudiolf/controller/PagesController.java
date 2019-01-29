@@ -1,5 +1,6 @@
 package br.com.estudiolf.controller;
 
+import java.awt.image.BufferedImage;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -17,8 +18,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.github.sarxos.webcam.Webcam;
+import com.google.zxing.BinaryBitmap;
+import com.google.zxing.LuminanceSource;
+import com.google.zxing.MultiFormatReader;
+import com.google.zxing.NotFoundException;
+import com.google.zxing.Result;
+import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
+import com.google.zxing.common.HybridBinarizer;
 
 import br.com.estudiolf.dao.MembroDAOImpl;
 import br.com.estudiolf.dao.PontoDAOImpl;
@@ -45,19 +54,19 @@ public class PagesController {
 		return "index";
 	}
 
-	@RequestMapping(value = "/cadastro", method = RequestMethod.GET)
+	@GetMapping(value = "/cadastro")
 	public String cadastro(Model model) {
 		model.addAttribute("membro", new Membro());
 		return "cadastro";
 	}
 
-	@RequestMapping(value = "/cadastroAdm", method = RequestMethod.GET)
+	@GetMapping(value = "/cadastroAdm")
 	public String cadastroAdm(Model model) {
 		model.addAttribute("membro", new Membro());
 		return "cadastroAdm";
 	}
 
-	@RequestMapping(value = "/cadastro", method = RequestMethod.POST)
+	@PostMapping(value = "/cadastro")
 	public String cadastroPost(@Valid Membro membro, BindingResult result) {
 		if (result.hasErrors()) {
 			return "cadastro";
@@ -155,11 +164,53 @@ public class PagesController {
 
 	}
 
-	@RequestMapping(value = "/marca", method = RequestMethod.POST)
+	@PostMapping(value = "/marca")
 	public String userMarca(Authentication authentication, Model model) throws SQLException {
-		if (!daoPonto.update(authentication.getName())) {
-			daoPonto.save(authentication.getName());
+		Result result = getQRCode();
+		if(result != null && result.getText().equals("S0me kn0w h0w t0 c0de")) {
+			if (!daoPonto.update(authentication.getName())) {
+				daoPonto.save(authentication.getName());
+			}
 		}
 		return user(authentication, model);
+	}
+	
+	private Result getQRCode() {
+		Webcam webcam = Webcam.getDefault();
+		webcam.open();
+		
+		Result result = null;
+		long startTime = System.currentTimeMillis();
+		long currentTime = startTime;
+		do {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+			BufferedImage image = null;
+
+			if (webcam.isOpen()) {
+				
+				if ((image = webcam.getImage()) == null) {
+					continue;					
+				}
+
+				LuminanceSource source = new BufferedImageLuminanceSource(image);
+				BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
+
+				try {					
+					result = new MultiFormatReader().decode(bitmap);					
+				} catch (NotFoundException e) {
+					
+				}
+			}
+			currentTime = System.currentTimeMillis();
+
+		} while (result == null && currentTime < startTime+20000);
+		
+		webcam.close();
+		return result;
 	}
 }
