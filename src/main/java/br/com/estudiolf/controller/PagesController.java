@@ -167,11 +167,14 @@ public class PagesController {
 	@PostMapping(value = "/marca")
 	public String userMarca(Authentication authentication, Model model) throws SQLException {
 		Result result = getQRCode();
+		System.out.println("fir");
 		if(result != null && result.getText().equals("S0me kn0w h0w t0 c0de")) {
+			System.out.println("sec");
 			if (!daoPonto.update(authentication.getName())) {
 				daoPonto.save(authentication.getName());
 			}
 		}
+		System.out.println("thir");
 		return user(authentication, model);
 	}
 	

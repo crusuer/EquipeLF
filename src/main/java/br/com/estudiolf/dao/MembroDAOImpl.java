@@ -41,13 +41,14 @@ public class MembroDAOImpl implements MembroDAO {
 	public boolean find(String user, String pass) {
 		Connection con = ConnectionFactory.getConnection();
 		Statement stmt = null;
+		boolean result = false;
 		try {
 			String sql = " select usuario from membro where usuario='" + user + "' and senha='" + pass + "' ";
 
 			stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery(sql);
 
-			return rs.next();
+			result = rs.next();
 		} catch (SQLException e) {
 
 			e.printStackTrace();
@@ -60,7 +61,7 @@ public class MembroDAOImpl implements MembroDAO {
 			}
 
 		}
-		return false;
+		return result;
 
 	}
 

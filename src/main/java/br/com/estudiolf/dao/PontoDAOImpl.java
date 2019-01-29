@@ -98,6 +98,7 @@ public class PontoDAOImpl implements PontoDAO {
 	public boolean update(String user) {
 		Connection con = ConnectionFactory.getConnection();
 		Statement stmt = null;
+		boolean result = false;
 		try {
 			Date now = new Date();
 
@@ -113,7 +114,7 @@ public class PontoDAOImpl implements PontoDAO {
 				stmt.executeUpdate(" update ponto set fim='" + sdfTime.format(now) + "' where usuario='" + user
 						+ "' and dia='" + sdfDate.format(now) + "' ");
 				rs.close();
-				return true;
+				result = true;
 			}
 
 			rs.close();
@@ -130,7 +131,7 @@ public class PontoDAOImpl implements PontoDAO {
 			}
 
 		}
-		return false;
+		return result;
 	}
 
 	@Override
