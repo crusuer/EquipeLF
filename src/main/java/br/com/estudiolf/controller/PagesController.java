@@ -1,15 +1,12 @@
 package br.com.estudiolf.controller;
 
-import java.awt.image.BufferedImage;
-import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,15 +20,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import com.github.sarxos.webcam.Webcam;
-import com.google.zxing.BinaryBitmap;
-import com.google.zxing.LuminanceSource;
-import com.google.zxing.MultiFormatReader;
-import com.google.zxing.NotFoundException;
-import com.google.zxing.Result;
-import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
-import com.google.zxing.common.HybridBinarizer;
 
 import br.com.estudiolf.dao.MembroDAOImpl;
 import br.com.estudiolf.dao.PontoDAOImpl;
@@ -49,13 +37,16 @@ public class PagesController {
 	private PasswordEncoder passwordEncoder;
 
 	@RequestMapping("/index")
-	public String index(Model model) throws SocketException {
-		Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
-        List<String> displays = new ArrayList<>();
-        for (NetworkInterface netint : Collections.list(nets)) {
-        	displays.add(netint.getDisplayName());
-        }
-        model.addAttribute("valor",displays.contains("Realtek RTL8188CE Wireless LAN 802.11n COMBO PCI-E NIC"));
+	public String index(Model model, HttpServletRequest request) throws SocketException {
+		String remoteAddr = "";
+		if (request != null) {
+			remoteAddr = request.getHeader("X-FORWARDED-FOR");
+			if (remoteAddr == null || "".equals(remoteAddr)) {
+				remoteAddr = request.getRemoteAddr();
+			}
+		}
+
+		model.addAttribute("valor", remoteAddr);
 		return "index";
 	}
 
@@ -123,9 +114,9 @@ public class PagesController {
 					e.printStackTrace();
 				}
 			}
-			
+
 			String total = (int) (minutos / 60) + ":";
-			if((minutos % 60)<10) {
+			if ((minutos % 60) < 10) {
 				total += "0";
 			}
 			total += (minutos % 60);
@@ -150,10 +141,10 @@ public class PagesController {
 	@GetMapping(value = "/admin/marcacoes/edit/{id}")
 	public String marcacoesEdit(@PathVariable("id") String id, Model model) {
 		Ponto ponto = daoPonto.findOne(id);
-		model.addAttribute("ponto",ponto);
+		model.addAttribute("ponto", ponto);
 		return "admin/update";
 	}
-	
+
 	@PostMapping(value = "/admin/marcacoes/update")
 	public String marcacoesUpdate(@Valid Ponto ponto, Model model) {
 		daoPonto.updateAdmin(ponto);
@@ -171,54 +162,9 @@ public class PagesController {
 
 	@PostMapping(value = "/marca")
 	public String userMarca(Authentication authentication, Model model) throws SQLException {
-		Result result = getQRCode();
-		System.out.println("fir");
-		if(result != null && result.getText().equals("S0me kn0w h0w t0 c0de")) {
-			System.out.println("sec");
-			if (!daoPonto.update(authentication.getName())) {
-				daoPonto.save(authentication.getName());
-			}
+		if (!daoPonto.update(authentication.getName())) {
+			daoPonto.save(authentication.getName());
 		}
-		System.out.println("thir");
 		return user(authentication, model);
-	}
-	
-	private Result getQRCode() {
-		Webcam webcam = Webcam.getDefault();
-		webcam.open();
-		
-		Result result = null;
-		long startTime = System.currentTimeMillis();
-		long currentTime = startTime;
-		do {
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			
-			BufferedImage image = null;
-
-			if (webcam.isOpen()) {
-				
-				if ((image = webcam.getImage()) == null) {
-					continue;					
-				}
-
-				LuminanceSource source = new BufferedImageLuminanceSource(image);
-				BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
-
-				try {					
-					result = new MultiFormatReader().decode(bitmap);					
-				} catch (NotFoundException e) {
-					
-				}
-			}
-			currentTime = System.currentTimeMillis();
-
-		} while (result == null && currentTime < startTime+20000);
-		
-		webcam.close();
-		return result;
 	}
 }
