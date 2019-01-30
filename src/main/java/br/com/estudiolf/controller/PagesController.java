@@ -161,10 +161,22 @@ public class PagesController {
 	}
 
 	@PostMapping(value = "/marca")
-	public String userMarca(Authentication authentication, Model model) throws SQLException {
-		if (!daoPonto.update(authentication.getName())) {
-			daoPonto.save(authentication.getName());
+	public String userMarca(Authentication authentication, Model model, HttpServletRequest request)
+			throws SQLException {
+		String remoteAddr = "";
+		if (request != null) {
+			remoteAddr = request.getHeader("X-FORWARDED-FOR");
+			if (remoteAddr == null || "".equals(remoteAddr)) {
+				remoteAddr = request.getRemoteAddr();
+			}
 		}
+
+		if (remoteAddr.equals("189.55.228.102")) {
+			if (!daoPonto.update(authentication.getName())) {
+				daoPonto.save(authentication.getName());
+			}
+		}
+
 		return user(authentication, model);
 	}
 }
