@@ -15,8 +15,9 @@
   <body class="text-center">
   <form th:action="@{/index}" method="post" class="form-signin">
   <h1 class="h3 mb-3 font-weight-bold">Sistema da Equipe LF</h1>
+  <p th:text="${valor}"></p>
   <div th:if="${param.error}">
-	<p style="color: red">Usu&aacute;rio ou Senha inv&aacute;lidos. Digite novamente!</p>
+	<p style="color: red">Usu&aacute;rio ou Senha inv&aacute;lidos. Digite novamente!</p>	
 	</div>
   <label for="username" class="sr-only">Usu&aacute;rio</label>
   <input type="text" id="username" name="username" class="form-control" placeholder="Usuário" required autofocus>

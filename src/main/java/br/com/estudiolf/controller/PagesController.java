@@ -1,9 +1,13 @@
 package br.com.estudiolf.controller;
 
 import java.awt.image.BufferedImage;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -44,13 +48,14 @@ public class PagesController {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	@RequestMapping("/")
-	public String home() {
-		return "index";
-	}
-
 	@RequestMapping("/index")
-	public String index() {
+	public String index(Model model) throws SocketException {
+		Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
+        List<String> displays = new ArrayList<>();
+        for (NetworkInterface netint : Collections.list(nets)) {
+        	displays.add(netint.getDisplayName());
+        }
+        model.addAttribute("valor",displays.contains("Realtek RTL8188CE Wireless LAN 802.11n COMBO PCI-E NIC"));
 		return "index";
 	}
 
