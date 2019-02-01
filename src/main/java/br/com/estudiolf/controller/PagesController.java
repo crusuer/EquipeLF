@@ -171,7 +171,7 @@ public class PagesController {
 			}
 		}
 
-		if (remoteAddr.equals("189.55.228.102")) {
+		if (remoteAddr.equals("189.54.147.218")) {
 			if (!daoPonto.update(authentication.getName())) {
 				daoPonto.save(authentication.getName());
 			}
