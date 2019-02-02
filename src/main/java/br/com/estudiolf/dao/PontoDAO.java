@@ -6,6 +6,7 @@ import br.com.estudiolf.model.Ponto;
 
 public interface PontoDAO {
 
+	public List<Ponto> findByName(String name);
 	public List<Ponto> findByUser(String user);
 	public Ponto findOne(String id);
 	public void save(String user);

@@ -36,9 +36,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/css/**", "/cadastro", "/cadastroAdm").permitAll().antMatchers("/admin/**").hasRole("ADMIN")
+		http.authorizeRequests().antMatchers("/css/**", "/cadastro", "/cadastroAdm","/logout").permitAll().antMatchers("/admin/**").hasRole("ADMIN")
 				.anyRequest().authenticated().and().formLogin().loginPage("/index")
-				.successHandler(authenticationSuccessHandler).permitAll().and().logout().permitAll();
+				.successHandler(authenticationSuccessHandler).permitAll().and().logout().logoutUrl("/logout").permitAll();
 		http.exceptionHandling().accessDeniedPage("/403");
 	}
 	

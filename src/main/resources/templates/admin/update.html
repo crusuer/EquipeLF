@@ -1,22 +1,25 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Tela Administrativa</title>
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet">
+<link href="/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="/css/signin.css">
 </head>
 <body>
-<form th:object="${ponto}" th:action="@{/admin/marcacoes/update}" method="post" class="form-signin">
-<input type="text" id="id" th:field="*{id}" style="display:none;">
-<label for="dia" class="sr-only">Dia</label>
-  Dia <input type="text" id="dia" th:field="*{dia}" class="form-control">
- <label for="inicio" class="sr-only">Inicio</label>
-  In&iacute;cio <input type="text" id="inicio" th:field="*{inicio}" class="form-control">
- <label for="fim" class="sr-only">Fim</label>
-  Fim <input type="text" id="dia" th:field="*{fim}" class="form-control">
-  <button class="btn btn-lg btn-primary btn-block" id="submit" name="submit" type="submit">Salvar</button>
-</form>
+	<form th:object="${ponto}" th:action="@{/admin/marcacoes/update}"
+		method="post" class="form-signin">
+		<input type="text" id="id" th:field="*{id}" style="display: none;">
+		<label for="dia" class="sr-only">Dia</label> Dia <input type="text"
+			id="dia" th:field="*{dia}" class="form-control"> <label
+			for="inicio" class="sr-only">Inicio</label> In&iacute;cio <input
+			type="text" id="inicio" th:field="*{inicio}" class="form-control">
+		<label for="fim" class="sr-only">Fim</label> Fim <input type="text"
+			id="dia" th:field="*{fim}" class="form-control">
+		<button class="btn btn-lg btn-primary btn-block" id="submit"
+			name="submit" type="submit">Salvar</button>
+	</form>
 </body>
 </html>

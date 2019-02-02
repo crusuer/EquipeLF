@@ -25,13 +25,57 @@ public class PontoDAOImpl implements PontoDAO {
 	}
 
 	@Override
+	public List<Ponto> findByName(String name) {
+		Connection con = ConnectionFactory.getConnection();
+		Statement stmt = null;
+		List<Ponto> pontos = new ArrayList<>();
+		try {
+			Date now = new Date();
+			String sql = " select p.id,p.dia,p.inicio,p.fim from ponto p join membro m on p.usuario=m.usuario where m.nome like '" + name + "%' and p.dia like '__"
+					+ sdfDate.format(now).substring(2) + "' ";
+
+			stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(sql);
+
+			while (rs.next()) {
+				Ponto ponto = new Ponto();
+				ponto.setId(rs.getInt("ID"));
+				ponto.setDia(rs.getString("dia"));
+				ponto.setInicio(rs.getString("inicio"));
+				ponto.setFim(rs.getString("fim"));
+				try {
+					ponto.setTotal();
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				pontos.add(ponto);
+			}
+			rs.close();
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		} finally {
+			try {
+				stmt.close();
+				con.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
+		}
+		return pontos;
+
+	}
+	
+	@Override
 	public List<Ponto> findByUser(String user) {
 		Connection con = ConnectionFactory.getConnection();
 		Statement stmt = null;
 		List<Ponto> pontos = new ArrayList<>();
 		try {
 			Date now = new Date();
-			String sql = " select id,dia,inicio,fim from ponto where usuario='" + user + "' and dia like '__"
+			String sql = "  select id,dia,inicio,fim from ponto where usuario='" + user + "' and dia like '__"
 					+ sdfDate.format(now).substring(2) + "' ";
 
 			stmt = con.createStatement();

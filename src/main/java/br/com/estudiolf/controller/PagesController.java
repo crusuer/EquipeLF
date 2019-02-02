@@ -67,6 +67,7 @@ public class PagesController {
 		if (result.hasErrors()) {
 			return "cadastro";
 		} else {
+			membro.setNome(membro.getNome().toUpperCase());
 			membro.setSenha(passwordEncoder.encode(membro.getSenha()));
 			dao.save(membro);
 
@@ -129,10 +130,10 @@ public class PagesController {
 	}
 
 	@RequestMapping(value = "/admin/marcacoes")
-	public String marcacoes(@RequestParam(value = "username", required = false) String username, Model model) {
+	public String marcacoes(@RequestParam(value = "name", required = false) String name, Model model) {
 		List<Ponto> pontos = new ArrayList<>();
-		if (username != null) {
-			pontos = daoPonto.findByUser(username);
+		if (name != null) {
+			pontos = daoPonto.findByName(name);
 		}
 		model.addAttribute("pontos", pontos);
 		return "admin/marcacoes";

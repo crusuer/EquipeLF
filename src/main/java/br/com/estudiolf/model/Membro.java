@@ -12,9 +12,6 @@ public class Membro {
 	@NotNull
 	@Size(min = 6, max = 80)
 	private String senha;
-	@NotNull
-	@Size(min = 6, max = 80)
-	private String confsenha;
 	@Size(min = 6, max = 20)
 	private String tipo;
 
@@ -40,14 +37,6 @@ public class Membro {
 
 	public void setSenha(String senha) {
 		this.senha = senha;
-	}
-
-	public String getConfsenha() {
-		return confsenha;
-	}
-
-	public void setConfsenha(String confsenha) {
-		this.confsenha = confsenha;
 	}
 
 	public String getTipo() {
