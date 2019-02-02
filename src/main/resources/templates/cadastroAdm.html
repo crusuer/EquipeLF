@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Tela de cadastro</title>
+    <title>Tela de cadastro Adm</title>
 
     <!-- Bootstrap core CSS -->
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet">
@@ -23,8 +23,7 @@
   <input type="password" id="senha" name="senha" th:field="*{senha}" class="form-control" placeholder="Senha" onkeyup='check_pass();' required>
   <label th:if="${#fields.hasErrors('senha')}" th:errors="*{senha}">Pass Error</label>
   <label for="confsenha" class="sr-only">Confirmar Senha</label>
-  <input type="password" id="confsenha" name="confsenha" th:field="*{confsenha}" class="form-control" placeholder="Confirmar Senha" onkeyup='check_pass();' required>
-  <label th:if="${#fields.hasErrors('confsenha')}" th:errors="*{confsenha}">Pass Error</label>
+  <input type="password" id="confsenha" class="form-control" placeholder="Confirmar Senha" onkeyup='check_pass();' required>
   <input type="text" id="tipo" name="tipo" th:value="ROLE_ADMIN" style="display:none;">
   <button class="btn btn-lg btn-primary btn-block" id="submit" name="submit" type="submit" disabled>Cadastrar</button>
   <a class="btn btn-lg btn-danger btn-block" href="/">Cancelar</a>
