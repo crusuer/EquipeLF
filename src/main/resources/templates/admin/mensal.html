@@ -12,8 +12,37 @@
 <link href="/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-	<!-- Include _menu.html -->
-	<th:block th:include="/admin/_menu"></th:block>
+	<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+		<button class="navbar-toggler" type="button" data-toggle="collapse"
+			data-target="#navbarsExampleDefault"
+			aria-controls="navbarsExampleDefault" aria-expanded="false"
+			aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
+		<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item"><a class="nav-link" href="/admin">In&iacute;cio</a>
+				</li>
+				<li class="nav-item"><a class="nav-link" href="/admin/usuarios">Usu&aacute;rios</a>
+				</li>
+				<li class="nav-item dropdown active"><a
+					class="nav-link dropdown-toggle" id="dropdown01"
+					data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Relat&oacute;rios</a>
+					<div class="dropdown-menu" aria-labelledby="dropdown01">
+						<a class="dropdown-item" href="/admin/relatorios/mensal">Mensal</a>
+					</div></li>
+				<li class="nav-item"><a class="nav-link"
+					href="/admin/marcacoes">Marca&ccedil;&otilde;es</a></li>
+			</ul>
+			<form class="form-inline my-2 my-lg-0" th:action="@{/logout}"
+				method="post">
+				<button class="btn btn-secondary my-2 my-sm-0" type="submit">Sair</button>
+			</form>
+		</div>
+	</nav>
+	<script src="/jquery/jquery.min.js"></script>
+	<script src="/jquery/bootstrap.bundle.min.js"></script>
 
 	<div class="container">
 		<div class="row">
