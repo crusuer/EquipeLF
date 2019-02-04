@@ -1,4 +1,4 @@
-package br.com.estudiolf.model;
+package br.com.estudiolf.entity;
 
 public class Resumo {
 	private String nome;

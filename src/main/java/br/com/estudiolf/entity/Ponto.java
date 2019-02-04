@@ -1,23 +1,58 @@
-package br.com.estudiolf.model;
+package br.com.estudiolf.entity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+
+@Entity
+@Table(name = "Ponto", //
+uniqueConstraints = { //
+		@UniqueConstraint(name = "PONTO_UK", columnNames = {"usuario", "dia"}) })
 public class Ponto {
 
-	private int id;
+	@Id
+    @GeneratedValue
+    @Column(name = "id", nullable = false)
+	private Long id;
+	
+	@ManyToOne
+	@JoinColumn(name = "usuario", nullable = false)
+	private Membro usuario;
+	
+	@Column(name = "dia", length = 10, nullable = false)
 	private String dia;
+	
+	@Column(name = "inicio", length = 8)
 	private String inicio;
+	
+	@Column(name = "fim", length = 10)
 	private String fim;
+	
 	private String total;
 
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Membro getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Membro usuario) {
+		this.usuario = usuario;
 	}
 
 	public String getDia() {
@@ -50,7 +85,7 @@ public class Ponto {
 
 	public void setTotal() throws ParseException {
 		this.total = "";
-		if (!fim.isEmpty()) {
+		if (fim != null) {
 
 			SimpleDateFormat format = new SimpleDateFormat("HH:mm");
 			Date date1 = format.parse(inicio);

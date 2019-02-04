@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -21,17 +22,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import br.com.estudiolf.dao.MembroDAOImpl;
-import br.com.estudiolf.dao.PontoDAOImpl;
-import br.com.estudiolf.model.Membro;
-import br.com.estudiolf.model.Ponto;
-import br.com.estudiolf.model.Resumo;
+import br.com.estudiolf.entity.Membro;
+import br.com.estudiolf.entity.Ponto;
+import br.com.estudiolf.entity.Resumo;
+import br.com.estudiolf.repository.MembroRepository;
+import br.com.estudiolf.repository.PontoRepository;
+import br.com.estudiolf.utils.TimeUtils;
 
 @Controller
 public class PagesController {
 
-	MembroDAOImpl dao = new MembroDAOImpl();
-	PontoDAOImpl daoPonto = new PontoDAOImpl();
+	@Autowired
+	MembroRepository membroRepository;
+
+	@Autowired
+	PontoRepository pontoRepository;
+
+	TimeUtils timeUtils = new TimeUtils();
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -69,7 +76,8 @@ public class PagesController {
 		} else {
 			membro.setNome(membro.getNome().toUpperCase());
 			membro.setSenha(passwordEncoder.encode(membro.getSenha()));
-			dao.save(membro);
+			membro.setHabilitado(true);
+			membroRepository.save(membro);
 
 			return "index";
 		}
@@ -82,27 +90,29 @@ public class PagesController {
 
 	@RequestMapping(value = "/admin/usuarios")
 	public String usuarios(Model model) {
-		List<Membro> membros = dao.findAll();
-		model.addAttribute("membros", membros);
+		model.addAttribute("membros", membroRepository.findByTipoAndHabilitado("ROLE_USER", true));
 		return "admin/usuarios";
 	}
 
 	@GetMapping("/admin/usuarios/del/{usuario}")
 	public String edit(@PathVariable("usuario") String usuario, Model model) {
-		dao.disable(usuario);
+		Membro m = membroRepository.findByUsuario(usuario);
+		m.setHabilitado(false);
+		membroRepository.save(m);
 		return usuarios(model);
 	}
 
 	@RequestMapping(value = "/admin/relatorios/mensal")
 	public String relatorios(Model model) {
 		List<Resumo> resumos = new ArrayList<>();
-		List<Membro> membros = dao.findAll();
+		Iterable<Membro> membros = membroRepository.findByTipoAndHabilitado("ROLE_USER", true);
 
 		for (Membro m : membros) {
 			Resumo resumo = new Resumo();
 			resumo.setNome(m.getNome());
+			String dia = "__" + timeUtils.sdfDate.format(timeUtils.getTime()).substring(2);
 
-			List<Ponto> pontos = daoPonto.findByUser(m.getUsuario());
+			Iterable<Ponto> pontos = pontoRepository.findByUsuarioAndDia(m, dia);
 			int minutos = 0;
 			for (Ponto p : pontos) {
 				try {
@@ -131,30 +141,44 @@ public class PagesController {
 
 	@RequestMapping(value = "/admin/marcacoes")
 	public String marcacoes(@RequestParam(value = "name", required = false) String name, Model model) {
-		List<Ponto> pontos = new ArrayList<>();
+		Iterable<Ponto> pontos = new ArrayList<>();
 		if (name != null) {
-			pontos = daoPonto.findByName(name);
+			Optional<Membro> m = membroRepository.findByUsuarioLike(name);
+			if (m.isPresent()) {
+				String dia = "__" + timeUtils.sdfDate.format(timeUtils.getTime()).substring(2);
+				pontos = pontoRepository.findByUsuarioAndDia(m.get(), dia);
+				model.addAttribute("nome",m.get().getNome());
+			}
 		}
 		model.addAttribute("pontos", pontos);
 		return "admin/marcacoes";
 	}
 
 	@GetMapping(value = "/admin/marcacoes/edit/{id}")
-	public String marcacoesEdit(@PathVariable("id") String id, Model model) {
-		Ponto ponto = daoPonto.findOne(id);
+	public String marcacoesEdit(@PathVariable("id") Long id, Model model) {
+		Ponto ponto = pontoRepository.findById(id).orElse(null);
 		model.addAttribute("ponto", ponto);
 		return "admin/update";
 	}
 
 	@PostMapping(value = "/admin/marcacoes/update")
-	public String marcacoesUpdate(@Valid Ponto ponto, Model model) {
-		daoPonto.updateAdmin(ponto);
+	public String marcacoesUpdate(@Valid Ponto ponto, Authentication authentication, Model model)
+			throws ParseException {
+		Ponto p = pontoRepository.findById(ponto.getId()).orElse(null);
+		p.setDia(ponto.getDia());
+		p.setInicio(ponto.getInicio());
+		p.setFim(ponto.getFim());
+		p.setTotal();
+		pontoRepository.save(p);
 		return marcacoes("", model);
 	}
 
 	@RequestMapping("/user")
 	public String user(Authentication authentication, Model model) throws SQLException {
-		List<Ponto> pontos = daoPonto.findByUser(authentication.getName());
+		String dia = "__" + timeUtils.sdfDate.format(timeUtils.getTime()).substring(2);
+
+		Iterable<Ponto> pontos = pontoRepository
+				.findByUsuarioAndDia(membroRepository.findByUsuario(authentication.getName()), dia);
 		model.addAttribute("pontos", pontos);
 		model.addAttribute("username", authentication.getName());
 		return "user";
@@ -163,7 +187,7 @@ public class PagesController {
 
 	@PostMapping(value = "/marca")
 	public String userMarca(Authentication authentication, Model model, HttpServletRequest request)
-			throws SQLException {
+			throws SQLException, ParseException {
 		String remoteAddr = "";
 		if (request != null) {
 			remoteAddr = request.getHeader("X-FORWARDED-FOR");
@@ -171,12 +195,26 @@ public class PagesController {
 				remoteAddr = request.getRemoteAddr();
 			}
 		}
-
-		if (remoteAddr.equals("189.54.147.218")) {
-			if (!daoPonto.update(authentication.getName())) {
-				daoPonto.save(authentication.getName());
-			}
+		// if (remoteAddr.equals("189.54.147.218")) {
+		String dia = timeUtils.sdfDate.format(timeUtils.getTime());
+		Iterable<Ponto> ponto = pontoRepository
+				.findByUsuarioAndDia(membroRepository.findByUsuario(authentication.getName()), dia);
+		boolean check = true;
+		for (Ponto p : ponto) {
+			check = false;
+			p.setFim(timeUtils.sdfTime.format(timeUtils.getTime()));
+			p.setTotal();
+			pontoRepository.save(p);
 		}
+		if (check) {
+			Ponto p = new Ponto();
+			p.setDia(dia);
+			p.setInicio(timeUtils.sdfTime.format(timeUtils.getTime()));
+			p.setTotal();
+			p.setUsuario(membroRepository.findByUsuario(authentication.getName()));
+			pontoRepository.save(p);
+		}
+		// }
 
 		return user(authentication, model);
 	}
