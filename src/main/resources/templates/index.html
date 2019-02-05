@@ -2,29 +2,32 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Tela inicial</title>
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Tela inicial</title>
 
-    <!-- Bootstrap core CSS -->
+<!-- Bootstrap core CSS -->
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="css/signin.css">
 
-  </head>
-  <body class="text-center">
-  <form th:action="@{/index}" method="post" class="form-signin">
-  <h1 class="h3 mb-3 font-weight-bold">Sistema da Equipe LF</h1>
-  <!-- <p th:text="${valor}"></p> -->
-  <div th:if="${param.error}">
-	<p style="color: red">Usu&aacute;rio ou Senha inv&aacute;lidos. Digite novamente!</p>	
-	</div>
-  <label for="username" class="sr-only">Usu&aacute;rio</label>
-  <input type="text" id="username" name="username" class="form-control" placeholder="Usuário" required autofocus>
-  <label for="password" class="sr-only">Senha</label>
-  <input type="password" id="password" name="password" class="form-control" placeholder="Senha" required>
-  <button class="btn btn-lg btn-primary btn-block" type="submit">Entrar</button>
-  <p class="lead">N&atilde;o possui cadastro? <a href="/cadastro">Clique aqui...</a></p>
-</form>
+</head>
+<body class="text-center">
+	<form th:action="@{/index}" method="post" class="form-signin">
+		<h1 class="h3 mb-3 font-weight-bold">Sistema da Equipe LF</h1>
+		<div th:if="${param.error}">
+			<p style="color: red">Usu&aacute;rio ou Senha inv&aacute;lidos.
+				Digite novamente!</p>
+		</div>
+		<label for="username" class="sr-only">Usu&aacute;rio</label>
+		<input type="text" id="username" name="username" class="form-control" placeholder="Usuário" required autofocus>
+		<label for="password" class="sr-only">Senha</label> 
+		<input type="password" id="password" name="password" class="form-control" placeholder="Senha" required>
+		<button class="btn btn-lg btn-primary btn-block" type="submit">Entrar</button>
+		<p class="lead">
+			N&atilde;o possui cadastro? <a href="/cadastro">Clique aqui...</a>
+		</p>
+	</form>
 </body>
 </html>

@@ -1,7 +1,6 @@
 package br.com.estudiolf.controller;
 
 import java.net.SocketException;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,16 +43,7 @@ public class PagesController {
 	private PasswordEncoder passwordEncoder;
 
 	@RequestMapping("/index")
-	public String index(Model model, HttpServletRequest request) throws SocketException {
-		String remoteAddr = "";
-		if (request != null) {
-			remoteAddr = request.getHeader("X-FORWARDED-FOR");
-			if (remoteAddr == null || "".equals(remoteAddr)) {
-				remoteAddr = request.getRemoteAddr();
-			}
-		}
-
-		model.addAttribute("valor", remoteAddr);
+	public String index(Model model) throws SocketException {
 		return "index";
 	}
 
@@ -102,8 +92,13 @@ public class PagesController {
 		return usuarios(model);
 	}
 
+	@RequestMapping(value = "/admin/bailes")
+	public String bailes(Model model) {
+		return "admin/bailes";
+	}
+
 	@RequestMapping(value = "/admin/relatorios/mensal")
-	public String relatorios(Model model) {
+	public String relatorioMensal(Model model) {
 		List<Resumo> resumos = new ArrayList<>();
 		Iterable<Membro> membros = membroRepository.findByTipoAndHabilitado("ROLE_USER", true);
 
@@ -139,6 +134,43 @@ public class PagesController {
 		return "admin/mensal";
 	}
 
+	@RequestMapping(value = "/admin/relatorios/anual")
+	public String relatorioAnual(Model model) {
+		List<Resumo> resumos = new ArrayList<>();
+		Iterable<Membro> membros = membroRepository.findByTipoAndHabilitado("ROLE_USER", true);
+
+		for (Membro m : membros) {
+			Resumo resumo = new Resumo();
+			resumo.setNome(m.getNome());
+			String dia = "__/__" + timeUtils.sdfDate.format(timeUtils.getTime()).substring(5);
+
+			Iterable<Ponto> pontos = pontoRepository.findByUsuarioAndDia(m, dia);
+			int minutos = 0;
+			for (Ponto p : pontos) {
+				try {
+					if (!p.getTotal().isEmpty()) {
+						String[] split = p.getTotal().split(":");
+						minutos += (60 * Integer.parseInt(split[0]) + Integer.parseInt(split[1]));
+					}
+
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
+
+			String total = (int) (minutos / 60) + ":";
+			if ((minutos % 60) < 10) {
+				total += "0";
+			}
+			total += (minutos % 60);
+			resumo.setTotal(total);
+			resumos.add(resumo);
+		}
+
+		model.addAttribute("resumos", resumos);
+		return "admin/anual";
+	}
+
 	@RequestMapping(value = "/admin/marcacoes")
 	public String marcacoes(@RequestParam(value = "name", required = false) String name, Model model) {
 		Iterable<Ponto> pontos = new ArrayList<>();
@@ -147,7 +179,7 @@ public class PagesController {
 			if (m.isPresent()) {
 				String dia = "__" + timeUtils.sdfDate.format(timeUtils.getTime()).substring(2);
 				pontos = pontoRepository.findByUsuarioAndDia(m.get(), dia);
-				model.addAttribute("nome",m.get().getNome());
+				model.addAttribute("nome", m.get().getNome());
 			}
 		}
 		model.addAttribute("pontos", pontos);
@@ -168,13 +200,15 @@ public class PagesController {
 		p.setDia(ponto.getDia());
 		p.setInicio(ponto.getInicio());
 		p.setFim(ponto.getFim());
+		p.setInicioP(ponto.getInicioP());
+		p.setFimP(ponto.getFimP());
 		p.setTotal();
 		pontoRepository.save(p);
 		return marcacoes("", model);
 	}
 
-	@RequestMapping("/user")
-	public String user(Authentication authentication, Model model) throws SQLException {
+	@GetMapping("/user")
+	public String user(Authentication authentication, Model model) {
 		String dia = "__" + timeUtils.sdfDate.format(timeUtils.getTime()).substring(2);
 
 		Iterable<Ponto> pontos = pontoRepository
@@ -185,9 +219,9 @@ public class PagesController {
 
 	}
 
-	@PostMapping(value = "/marca")
-	public String userMarca(Authentication authentication, Model model, HttpServletRequest request,@RequestParam(value="action", required=true) String action)
-			throws SQLException, ParseException {
+	@PostMapping(value = "/user")
+	public String userMarca(Authentication authentication, Model model, HttpServletRequest request,
+			@RequestParam(value = "action", required = true) String action) throws ParseException {
 		String remoteAddr = "";
 		if (request != null) {
 			remoteAddr = request.getHeader("X-FORWARDED-FOR");
@@ -195,35 +229,35 @@ public class PagesController {
 				remoteAddr = request.getRemoteAddr();
 			}
 		}
-		// if (remoteAddr.equals("189.54.147.218")) {
-		String dia = timeUtils.sdfDate.format(timeUtils.getTime());
-		Iterable<Ponto> ponto = pontoRepository
-				.findByUsuarioAndDia(membroRepository.findByUsuario(authentication.getName()), dia);
-		boolean check = true;
-		for (Ponto p : ponto) {
-			check = false;
-			if(action.equals("Pausar")) {
-				if(p.getInicioP() == null) {
-					p.setInicioP(timeUtils.sdfTime.format(timeUtils.getTime()));					
+
+		if (remoteAddr.equals("189.54.147.218")) {
+			String dia = timeUtils.sdfDate.format(timeUtils.getTime());
+			Iterable<Ponto> ponto = pontoRepository
+					.findByUsuarioAndDia(membroRepository.findByUsuario(authentication.getName()), dia);
+			boolean check = true;
+			for (Ponto p : ponto) {
+				check = false;
+				if (action.equals("Pausar")) {
+					if (p.getInicioP() == null) {
+						p.setInicioP(timeUtils.sdfTime.format(timeUtils.getTime()));
+					} else {
+						p.setFimP(timeUtils.sdfTime.format(timeUtils.getTime()));
+					}
 				} else {
-					p.setFimP(timeUtils.sdfTime.format(timeUtils.getTime()));
+					p.setFim(timeUtils.sdfTime.format(timeUtils.getTime()));
+					p.setTotal();
 				}
+				pontoRepository.save(p);
 			}
-			else {
-				p.setFim(timeUtils.sdfTime.format(timeUtils.getTime()));
-				p.setTotal();				
+			if (check) {
+				Ponto p = new Ponto();
+				p.setDia(dia);
+				p.setInicio(timeUtils.sdfTime.format(timeUtils.getTime()));
+				p.setTotal();
+				p.setUsuario(membroRepository.findByUsuario(authentication.getName()));
+				pontoRepository.save(p);
 			}
-			pontoRepository.save(p);
 		}
-		if (check) {
-			Ponto p = new Ponto();
-			p.setDia(dia);
-			p.setInicio(timeUtils.sdfTime.format(timeUtils.getTime()));
-			p.setTotal();
-			p.setUsuario(membroRepository.findByUsuario(authentication.getName()));
-			pontoRepository.save(p);
-		}
-		// }
 
 		return user(authentication, model);
 	}

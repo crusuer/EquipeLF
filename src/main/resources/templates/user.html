@@ -14,7 +14,7 @@
   </head>
   <body class="text-center">
   <div class="form-signin">
-    <form th:action="@{/marca}" method="post">
+    <form th:action="@{/user}" method="post">
   <h1 class="h3 mb-3 font-weight-bold">Marca&ccedil;&otilde;es</h1>
   
   <table class="table table-sm table-striped table-bordered">
@@ -30,7 +30,7 @@
 				</thead>
 				<tr th:each="ponto : ${pontos}">
 					<td th:text="${ponto.id}" style="display:none;"></td>
-					<td th:text="${ponto.dia}"></td>
+					<td th:text="${#dates.format(ponto.dia, 'dd/MM/yy')}"></td>
 					<td th:text="${ponto.inicio}"></td>
 					<td th:text="${ponto.fim}"></td>					
 					<td th:text="${ponto.total}"></td>
