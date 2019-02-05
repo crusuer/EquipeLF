@@ -186,7 +186,7 @@ public class PagesController {
 	}
 
 	@PostMapping(value = "/marca")
-	public String userMarca(Authentication authentication, Model model, HttpServletRequest request)
+	public String userMarca(Authentication authentication, Model model, HttpServletRequest request,@RequestParam(value="action", required=true) String action)
 			throws SQLException, ParseException {
 		String remoteAddr = "";
 		if (request != null) {
@@ -202,8 +202,17 @@ public class PagesController {
 		boolean check = true;
 		for (Ponto p : ponto) {
 			check = false;
-			p.setFim(timeUtils.sdfTime.format(timeUtils.getTime()));
-			p.setTotal();
+			if(action.equals("Pausar")) {
+				if(p.getInicioP() == null) {
+					p.setInicioP(timeUtils.sdfTime.format(timeUtils.getTime()));					
+				} else {
+					p.setFimP(timeUtils.sdfTime.format(timeUtils.getTime()));
+				}
+			}
+			else {
+				p.setFim(timeUtils.sdfTime.format(timeUtils.getTime()));
+				p.setTotal();				
+			}
 			pontoRepository.save(p);
 		}
 		if (check) {

@@ -37,6 +37,12 @@ public class Ponto {
 	@Column(name = "fim", length = 10)
 	private String fim;
 	
+	@Column(name = "inicioP", length = 8)
+	private String inicioP;
+	
+	@Column(name = "fimP", length = 10)
+	private String fimP;
+	
 	private String total;
 
 	public Long getId() {
@@ -78,6 +84,22 @@ public class Ponto {
 	public void setFim(String fim) {
 		this.fim = fim;
 	}
+	
+	public String getInicioP() {
+		return inicioP;
+	}
+
+	public void setInicioP(String inicioP) {
+		this.inicioP = inicioP;
+	}
+
+	public String getFimP() {
+		return fimP;
+	}
+
+	public void setFimP(String fimP) {
+		this.fimP = fimP;
+	}
 
 	public String getTotal() throws ParseException {
 		return total;
@@ -90,7 +112,13 @@ public class Ponto {
 			SimpleDateFormat format = new SimpleDateFormat("HH:mm");
 			Date date1 = format.parse(inicio);
 			Date date2 = format.parse(fim);
-			long diff = date2.getTime() - date1.getTime();
+			long intervalo = 0;
+			if(inicioP != null && fimP != null) {
+				Date date3 = format.parse(inicioP);
+				Date date4 = format.parse(fimP);
+				intervalo = date4.getTime() - date3.getTime();
+			}
+			long diff = date2.getTime() - date1.getTime() - intervalo;
 			diff = diff / 1000;
 
 			long hours = (diff / 3600);
