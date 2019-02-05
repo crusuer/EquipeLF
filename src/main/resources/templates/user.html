@@ -17,32 +17,30 @@
     <form th:action="@{/marca}" method="post">
   <h1 class="h3 mb-3 font-weight-bold">Marca&ccedil;&otilde;es</h1>
   
-  <table class="table-sm table-striped table-bordered">
+  <table class="table table-sm table-striped table-bordered">
 				<thead>
 					<tr>
 						<th style="display:none;">ID</th>
 						<th>Data</th>
 						<th>In&iacute;cio</th>
-						<th>Fim</th>
-						<th>In&iacute;cio Pausa</th>
-						<th>Fim Pausa</th>
+						<th>Fim</th>						
 						<th>Total</th>
-						<th style="display:none;">Ajustar</th>
+						<th colspan="2">Pausa</th>
 					</tr>
 				</thead>
 				<tr th:each="ponto : ${pontos}">
 					<td th:text="${ponto.id}" style="display:none;"></td>
 					<td th:text="${ponto.dia}"></td>
 					<td th:text="${ponto.inicio}"></td>
-					<td th:text="${ponto.fim}"></td>
+					<td th:text="${ponto.fim}"></td>					
+					<td th:text="${ponto.total}"></td>
 					<td th:text="${ponto.inicioP}"></td>
 					<td th:text="${ponto.fimP}"></td>
-					<td th:text="${ponto.total}"></td>
 				</tr>
 			</table>
 		
-  <input class="btn btn-lg btn-primary btn-block" type="submit" name="action" value='Marcar' />
-  <input class="btn btn-lg btn-info btn-block" type="submit" name="action" value='Pausar' />
+  <button class="btn btn-lg btn-primary btn-block" name="action" th:value='Marcar'>Marcar</button>
+  <button class="btn btn-lg btn-info btn-block" name="action" th:value='Pausar' >Pausa</button>
   <input type="text" name="username" th:value="${username}" style="display:none;">
 </form>
 <form th:action="@{/logout}" method="post">
