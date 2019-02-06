@@ -93,7 +93,14 @@ public class PagesController {
 	}
 
 	@RequestMapping(value = "/admin/bailes")
-	public String bailes(Model model) {
+	public String bailes(@RequestParam(value = "dia", required = false) String dia, Model model) throws ParseException {
+		if(dia != null && !dia.isEmpty()) {
+			model.addAttribute("dia", dia);
+			Iterable<Membro> membros = membroRepository.findByDiaBaile(timeUtils.sdfDate.format(timeUtils.interDate.parse(dia)));
+			model.addAttribute("membros", membros);
+			Iterable<Membro> presentes = membroRepository.findByPresenteBaile(timeUtils.sdfDate.format(timeUtils.interDate.parse(dia)));
+			model.addAttribute("presentes", presentes);
+		}
 		return "admin/bailes";
 	}
 
@@ -174,7 +181,8 @@ public class PagesController {
 	@RequestMapping(value = "/admin/marcacoes")
 	public String marcacoes(@RequestParam(value = "name", required = false) String name, Model model) {
 		Iterable<Ponto> pontos = new ArrayList<>();
-		if (name != null) {
+		if (name != null && !name.isEmpty()) {
+			model.addAttribute("name", name);
 			Optional<Membro> m = membroRepository.findByUsuarioLike(name);
 			if (m.isPresent()) {
 				String dia = "__" + timeUtils.sdfDate.format(timeUtils.getTime()).substring(2);

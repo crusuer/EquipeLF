@@ -14,4 +14,10 @@ public interface MembroRepository extends CrudRepository<Membro, Long>{
 	
 	@Query("SELECT m FROM Membro m WHERE m.usuario LIKE :usuario")
 	public Optional<Membro> findByUsuarioLike(@Param("usuario") String usuario);
+	
+	@Query("SELECT m FROM Baile b RIGHT JOIN b.usuario m with b.dia=:dia WHERE b.usuario is NULL AND m.tipo = 'ROLE_USER' AND m.habilitado=true")
+	public Iterable<Membro> findByDiaBaile(@Param("dia") String dia);
+	
+	@Query("SELECT m from Baile b INNER JOIN b.usuario m WHERE b.dia=:dia AND m.tipo = 'ROLE_USER' AND m.habilitado=true")
+	public Iterable<Membro> findByPresenteBaile(@Param("dia") String dia);
 }
