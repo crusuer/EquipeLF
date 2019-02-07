@@ -78,13 +78,13 @@
 							<tr th:each="membro : ${membros}">
 								<td th:text="${membro.nome}"></td>
 								<td><a class="btn btn-sm btn-primary"
-									th:href="@{/admin/bailes/{usuario}(usuario=${membro.usuario})}">Presente</a>
+									th:href="@{/admin/bailes/check(dia=${dia},usuario=${membro.usuario})}">Presente</a>
 								</td>
 							</tr>
 						</table>
 					</div>
 					<div class="table-responsive" th:if="${not #lists.isEmpty(presentes)}">
-						<h5>Presentes</h5>
+						<h5>Compareceram</h5>
 						<table class="table table-sm table-bordered">
 							<thead>
 								<tr>

@@ -3,6 +3,8 @@ package br.com.estudiolf.controller;
 import java.net.SocketException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,9 +23,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import br.com.estudiolf.entity.Baile;
 import br.com.estudiolf.entity.Membro;
 import br.com.estudiolf.entity.Ponto;
 import br.com.estudiolf.entity.Resumo;
+import br.com.estudiolf.repository.BaileRepository;
 import br.com.estudiolf.repository.MembroRepository;
 import br.com.estudiolf.repository.PontoRepository;
 import br.com.estudiolf.utils.TimeUtils;
@@ -36,6 +40,9 @@ public class PagesController {
 
 	@Autowired
 	PontoRepository pontoRepository;
+
+	@Autowired
+	BaileRepository baileRepository;
 
 	TimeUtils timeUtils = new TimeUtils();
 
@@ -80,7 +87,9 @@ public class PagesController {
 
 	@RequestMapping(value = "/admin/usuarios")
 	public String usuarios(Model model) {
-		model.addAttribute("membros", membroRepository.findByTipoAndHabilitado("ROLE_USER", true));
+		List<Membro> membros = membroRepository.findByTipoAndHabilitado("ROLE_USER", true);
+		sort(membros);
+		model.addAttribute("membros", membros);
 		return "admin/usuarios";
 	}
 
@@ -94,21 +103,35 @@ public class PagesController {
 
 	@RequestMapping(value = "/admin/bailes")
 	public String bailes(@RequestParam(value = "dia", required = false) String dia, Model model) throws ParseException {
-		if(dia != null && !dia.isEmpty()) {
+		if (dia != null && !dia.isEmpty()) {
 			model.addAttribute("dia", dia);
-			Iterable<Membro> membros = membroRepository.findByDiaBaile(timeUtils.sdfDate.format(timeUtils.interDate.parse(dia)));
+			Iterable<Membro> membros = membroRepository
+					.findByDiaBaile(dia);
 			model.addAttribute("membros", membros);
-			Iterable<Membro> presentes = membroRepository.findByPresenteBaile(timeUtils.sdfDate.format(timeUtils.interDate.parse(dia)));
+			Iterable<Membro> presentes = membroRepository
+					.findByPresenteBaile(dia);
 			model.addAttribute("presentes", presentes);
 		}
 		return "admin/bailes";
 	}
 
+	@RequestMapping(value = "/admin/bailes/check")
+	public String bailesCheck(@RequestParam(value = "dia", required = true) String dia,
+			@RequestParam(value = "usuario", required = true) String usuario, Model model) throws ParseException {
+		Baile baile = new Baile();
+		baile.setDia(dia);
+		baile.setUsuario(membroRepository.findByUsuario(usuario));
+
+		baileRepository.save(baile);
+
+		return bailes(dia, model);
+	}
+
 	@RequestMapping(value = "/admin/relatorios/mensal")
 	public String relatorioMensal(Model model) {
 		List<Resumo> resumos = new ArrayList<>();
-		Iterable<Membro> membros = membroRepository.findByTipoAndHabilitado("ROLE_USER", true);
-
+		List<Membro> membros = membroRepository.findByTipoAndHabilitado("ROLE_USER", true);
+		sort(membros);
 		for (Membro m : membros) {
 			Resumo resumo = new Resumo();
 			resumo.setNome(m.getNome());
@@ -144,7 +167,8 @@ public class PagesController {
 	@RequestMapping(value = "/admin/relatorios/anual")
 	public String relatorioAnual(Model model) {
 		List<Resumo> resumos = new ArrayList<>();
-		Iterable<Membro> membros = membroRepository.findByTipoAndHabilitado("ROLE_USER", true);
+		List<Membro> membros = membroRepository.findByTipoAndHabilitado("ROLE_USER", true);
+		sort(membros);
 
 		for (Membro m : membros) {
 			Resumo resumo = new Resumo();
@@ -182,8 +206,9 @@ public class PagesController {
 	public String marcacoes(@RequestParam(value = "name", required = false) String name, Model model) {
 		Iterable<Ponto> pontos = new ArrayList<>();
 		if (name != null && !name.isEmpty()) {
+			name = name.toUpperCase();
 			model.addAttribute("name", name);
-			Optional<Membro> m = membroRepository.findByUsuarioLike(name);
+			Optional<Membro> m = membroRepository.findByNomeLike(name);
 			if (m.isPresent()) {
 				String dia = "__" + timeUtils.sdfDate.format(timeUtils.getTime()).substring(2);
 				pontos = pontoRepository.findByUsuarioAndDia(m.get(), dia);
@@ -268,5 +293,14 @@ public class PagesController {
 		}
 
 		return user(authentication, model);
+	}
+
+	private void sort(List<Membro> membros) {
+		Collections.sort(membros, new Comparator<Membro>() {
+			@Override
+			public int compare(Membro m2, Membro m1) {
+				return m1.getNome().compareTo(m2.getNome());
+			}
+		});
 	}
 }

@@ -1,5 +1,6 @@
 package br.com.estudiolf.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
@@ -10,10 +11,10 @@ import br.com.estudiolf.entity.Membro;
 
 public interface MembroRepository extends CrudRepository<Membro, Long>{
 	Membro findByUsuario(String usuario);
-	Iterable<Membro> findByTipoAndHabilitado(String tipo, boolean habilitado);
+	List<Membro> findByTipoAndHabilitado(String tipo, boolean habilitado);
 	
-	@Query("SELECT m FROM Membro m WHERE m.usuario LIKE :usuario")
-	public Optional<Membro> findByUsuarioLike(@Param("usuario") String usuario);
+	@Query("SELECT m FROM Membro m WHERE m.nome LIKE :nome")
+	public Optional<Membro> findByNomeLike(@Param("nome") String nome);
 	
 	@Query("SELECT m FROM Baile b RIGHT JOIN b.usuario m with b.dia=:dia WHERE b.usuario is NULL AND m.tipo = 'ROLE_USER' AND m.habilitado=true")
 	public Iterable<Membro> findByDiaBaile(@Param("dia") String dia);
