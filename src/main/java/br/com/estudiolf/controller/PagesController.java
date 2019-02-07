@@ -297,7 +297,7 @@ public class PagesController {
 	private void sort(List<Membro> membros) {
 		Collections.sort(membros, new Comparator<Membro>() {
 			@Override
-			public int compare(Membro m2, Membro m1) {
+			public int compare(Membro m1, Membro m2) {
 				return m1.getNome().compareTo(m2.getNome());
 			}
 		});
