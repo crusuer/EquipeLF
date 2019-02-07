@@ -1,6 +1,5 @@
 package br.com.estudiolf.controller;
 
-import java.net.SocketException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,8 +48,8 @@ public class PagesController {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	@RequestMapping("/index")
-	public String index(Model model) throws SocketException {
+	@RequestMapping("/")
+	public String index(Model model) {
 		return "index";
 	}
 
@@ -206,8 +205,9 @@ public class PagesController {
 	public String marcacoes(@RequestParam(value = "name", required = false) String name, Model model) {
 		Iterable<Ponto> pontos = new ArrayList<>();
 		if (name != null && !name.isEmpty()) {
+			name = name.toUpperCase();
 			model.addAttribute("name", name);
-			Optional<Membro> m = membroRepository.findByNomeLike(name);
+			Optional<Membro> m = membroRepository.findByNomeLike(name+"%");
 			if (m.isPresent()) {
 				String dia = "__" + timeUtils.sdfDate.format(timeUtils.getTime()).substring(2);
 				pontos = pontoRepository.findByUsuarioAndDia(m.get(), dia);
