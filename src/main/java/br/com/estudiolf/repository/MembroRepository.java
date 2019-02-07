@@ -13,7 +13,7 @@ public interface MembroRepository extends CrudRepository<Membro, Long>{
 	Membro findByUsuario(String usuario);
 	List<Membro> findByTipoAndHabilitado(String tipo, boolean habilitado);
 	
-	@Query("SELECT m FROM Membro m WHERE m.nome LIKE :nome")
+	@Query("SELECT m FROM Membro m WHERE m.nome = :nome")
 	public Optional<Membro> findByNomeLike(@Param("nome") String nome);
 	
 	@Query("SELECT m FROM Baile b RIGHT JOIN b.usuario m with b.dia=:dia WHERE b.usuario is NULL AND m.tipo = 'ROLE_USER' AND m.habilitado=true")
