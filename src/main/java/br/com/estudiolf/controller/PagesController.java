@@ -206,7 +206,6 @@ public class PagesController {
 	public String marcacoes(@RequestParam(value = "name", required = false) String name, Model model) {
 		Iterable<Ponto> pontos = new ArrayList<>();
 		if (name != null && !name.isEmpty()) {
-			name = name.toUpperCase();
 			model.addAttribute("name", name);
 			Optional<Membro> m = membroRepository.findByNomeLike(name);
 			if (m.isPresent()) {
