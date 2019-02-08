@@ -206,7 +206,7 @@ public class PagesController {
 		if (nome != null && !nome.isEmpty()) {
 			nome = nome.toUpperCase();
 			model.addAttribute("nome", nome);
-			List<Membro> m = membroRepository.findByNomeLike(nome);
+			List<Membro> m = membroRepository.findByNomeLike(nome+"%");
 			if ( m != null && !m.isEmpty()) {
 				String dia = "__" + timeUtils.sdfDate.format(timeUtils.getTime()).substring(2);
 				pontos = pontoRepository.findByUsuarioAndDia(m.get(0), dia);
