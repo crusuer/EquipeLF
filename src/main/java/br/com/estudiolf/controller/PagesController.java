@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -207,11 +206,11 @@ public class PagesController {
 		if (nome != null && !nome.isEmpty()) {
 			nome = nome.toUpperCase();
 			model.addAttribute("nome", nome);
-			Optional<Membro> m = membroRepository.findByNomeLike(nome);
-			if (m.isPresent()) {
+			List<Membro> m = membroRepository.findByNomeLike(nome);
+			if ( m != null && !m.isEmpty()) {
 				String dia = "__" + timeUtils.sdfDate.format(timeUtils.getTime()).substring(2);
-				pontos = pontoRepository.findByUsuarioAndDia(m.get(), dia);
-				model.addAttribute("nome", m.get().getNome());
+				pontos = pontoRepository.findByUsuarioAndDia(m.get(0), dia);
+				model.addAttribute("nome", m.get(0).getNome());
 			}
 		}
 		model.addAttribute("pontos", pontos);
