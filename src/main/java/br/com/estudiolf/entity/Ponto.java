@@ -107,7 +107,7 @@ public class Ponto {
 
 	public void setTotal() throws ParseException {
 		this.total = "";
-		if (fim != null) {
+		if (fim != null && !fim.isEmpty()) {
 
 			SimpleDateFormat format = new SimpleDateFormat("HH:mm");
 			Date date1 = format.parse(inicio);
