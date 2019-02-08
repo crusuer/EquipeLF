@@ -202,12 +202,12 @@ public class PagesController {
 	}
 
 	@RequestMapping(value = "/admin/marcacoes")
-	public String marcacoes(@RequestParam(value = "name", required = false) String name, Model model) {
+	public String marcacoes(@RequestParam(value = "nome", required = false) String nome, Model model) {
 		Iterable<Ponto> pontos = new ArrayList<>();
-		if (name != null && !name.isEmpty()) {
-			name = name.toUpperCase();
-			model.addAttribute("name", name);
-			Optional<Membro> m = membroRepository.findByNomeLike(name);
+		if (nome != null && !nome.isEmpty()) {
+			nome = nome.toUpperCase();
+			model.addAttribute("nome", nome);
+			Optional<Membro> m = membroRepository.findByNomeLike(nome);
 			if (m.isPresent()) {
 				String dia = "__" + timeUtils.sdfDate.format(timeUtils.getTime()).substring(2);
 				pontos = pontoRepository.findByUsuarioAndDia(m.get(), dia);
