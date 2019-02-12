@@ -107,13 +107,13 @@ public class Ponto {
 
 	public void setTotal() throws ParseException {
 		this.total = "";
-		if (fim != null && !fim.isEmpty()) {
+		if (fim != null) {
 
 			SimpleDateFormat format = new SimpleDateFormat("HH:mm");
 			Date date1 = format.parse(inicio);
 			Date date2 = format.parse(fim);
 			long intervalo = 0;
-			if(inicioP != null && fimP != null && !inicioP.isEmpty() && !fimP.isEmpty()) {
+			if(inicioP != null && fimP != null) {
 				Date date3 = format.parse(inicioP);
 				Date date4 = format.parse(fimP);
 				intervalo = date4.getTime() - date3.getTime();

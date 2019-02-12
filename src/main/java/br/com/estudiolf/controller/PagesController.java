@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -99,8 +100,8 @@ public class PagesController {
 		return usuarios(model);
 	}
 
-	@RequestMapping(value = "/admin/bailes")
-	public String bailes(@RequestParam(value = "dia", required = false) String dia, Model model) throws ParseException {
+	@RequestMapping(value = "/admin/eventos")
+	public String eventos(@RequestParam(value = "dia", required = false) String dia, Model model) throws ParseException {
 		if (dia != null && !dia.isEmpty()) {
 			model.addAttribute("dia", dia);
 			Iterable<Membro> membros = membroRepository
@@ -110,11 +111,11 @@ public class PagesController {
 					.findByPresenteBaile(dia);
 			model.addAttribute("presentes", presentes);
 		}
-		return "admin/bailes";
+		return "admin/eventos";
 	}
 
-	@RequestMapping(value = "/admin/bailes/check")
-	public String bailesCheck(@RequestParam(value = "dia", required = true) String dia,
+	@RequestMapping(value = "/admin/eventos/check")
+	public String eventosCheck(@RequestParam(value = "dia", required = true) String dia,
 			@RequestParam(value = "usuario", required = true) String usuario, Model model) throws ParseException {
 		Baile baile = new Baile();
 		baile.setDia(dia);
@@ -122,21 +123,25 @@ public class PagesController {
 
 		baileRepository.save(baile);
 
-		return bailes(dia, model);
+		return eventos(dia, model);
 	}
 
 	@RequestMapping(value = "/admin/relatorios/mensal")
-	public String relatorioMensal(Model model) {
+	public String relatorioMensal(@RequestParam(value = "mes", required = false, defaultValue = "01") String mes,Model model) {
+		model.addAttribute("mes",mes);
 		List<Resumo> resumos = new ArrayList<>();
 		List<Membro> membros = membroRepository.findByTipoAndHabilitado("ROLE_USER", true);
 		sort(membros);
+		
+		String dia = "__/"+ mes + timeUtils.sdfDate.format(timeUtils.getTime()).substring(5);
+		String diaEvento = timeUtils.interDate.format(timeUtils.getTime()).substring(0,5) + mes + "-__";
+		
 		for (Membro m : membros) {
 			Resumo resumo = new Resumo();
-			resumo.setNome(m.getNome());
-			String dia = "__" + timeUtils.sdfDate.format(timeUtils.getTime()).substring(2);
+			resumo.setNome(m.getNome());			
 
 			Iterable<Ponto> pontos = pontoRepository.findByUsuarioAndDia(m, dia);
-			int minutos = 0;
+			long minutos = 0;
 			for (Ponto p : pontos) {
 				try {
 					if (!p.getTotal().isEmpty()) {
@@ -155,6 +160,10 @@ public class PagesController {
 			}
 			total += (minutos % 60);
 			resumo.setTotal(total);
+			Integer eventos = baileRepository.countEventos(m, diaEvento);
+
+			resumo.setEventos(eventos);
+			
 			resumos.add(resumo);
 		}
 
@@ -167,14 +176,15 @@ public class PagesController {
 		List<Resumo> resumos = new ArrayList<>();
 		List<Membro> membros = membroRepository.findByTipoAndHabilitado("ROLE_USER", true);
 		sort(membros);
-
+		String dia = "__/__" + timeUtils.sdfDate.format(timeUtils.getTime()).substring(5);
+		
 		for (Membro m : membros) {
 			Resumo resumo = new Resumo();
 			resumo.setNome(m.getNome());
-			String dia = "__/__" + timeUtils.sdfDate.format(timeUtils.getTime()).substring(5);
+			
 
 			Iterable<Ponto> pontos = pontoRepository.findByUsuarioAndDia(m, dia);
-			int minutos = 0;
+			long minutos = 0;
 			for (Ponto p : pontos) {
 				try {
 					if (!p.getTotal().isEmpty()) {
@@ -193,6 +203,10 @@ public class PagesController {
 			}
 			total += (minutos % 60);
 			resumo.setTotal(total);
+			Integer eventos = baileRepository.countEventos(m,timeUtils.interDate.format(timeUtils.getTime()).substring(0,4) + "-__-__");
+
+			resumo.setEventos(eventos);
+			
 			resumos.add(resumo);
 		}
 
@@ -201,16 +215,16 @@ public class PagesController {
 	}
 
 	@RequestMapping(value = "/admin/marcacoes")
-	public String marcacoes(@RequestParam(value = "nome", required = false) String nome, Model model) {
+	public String marcacoes(@RequestParam(value = "name", required = false) String name, Model model) {
 		Iterable<Ponto> pontos = new ArrayList<>();
-		if (nome != null && !nome.isEmpty()) {
-			nome = nome.toUpperCase();
-			model.addAttribute("nome", nome);
-			List<Membro> m = membroRepository.findByNomeLike(nome+"%");
-			if ( m != null && !m.isEmpty()) {
+		if (name != null && !name.isEmpty()) {
+			name = name.toUpperCase();
+			model.addAttribute("name", name);
+			Optional<Membro> m = membroRepository.findByNomeLike(name+"%");
+			if (m.isPresent()) {
 				String dia = "__" + timeUtils.sdfDate.format(timeUtils.getTime()).substring(2);
-				pontos = pontoRepository.findByUsuarioAndDia(m.get(0), dia);
-				model.addAttribute("nome", m.get(0).getNome());
+				pontos = pontoRepository.findByUsuarioAndDia(m.get(), dia);
+				model.addAttribute("nome", m.get().getNome());
 			}
 		}
 		model.addAttribute("pontos", pontos);

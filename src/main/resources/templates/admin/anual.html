@@ -26,7 +26,7 @@
 				</li>
 				<li class="nav-item"><a class="nav-link" href="/admin/usuarios">Usu&aacute;rios</a>
 				</li>
-				<li class="nav-item"><a class="nav-link" href="/admin/bailes">Bailes</a>
+				<li class="nav-item"><a class="nav-link" href="/admin/eventos">Eventos</a>
 				</li>
 				<li class="nav-item dropdown active"><a
 					class="nav-link dropdown-toggle" id="dropdown01"
@@ -57,12 +57,14 @@
 						<thead>
 							<tr>
 								<th>Nome</th>
-								<th>Total</th>
+								<th>Tempo Total</th>
+								<th>Eventos</th>
 							</tr>
 						</thead>
 						<tr th:each="resumo : ${resumos}">
 							<td th:text="${resumo.nome}"></td>
 							<td th:text="${resumo.total}"></td>
+							<td th:text="${resumo.eventos}"></td>
 						</tr>
 					</table>
 				</div>

@@ -17,7 +17,7 @@
   <input type="text" id="nome" th:field="*{nome}" class="form-control" placeholder="Nome Completo" required autofocus>
   <label th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}">Name Error</label>
   <label for="usuario" class="sr-only">Usu&aacute;rio</label>
-  <input type="text" id="usuario" th:field="*{usuario}" class="form-control" placeholder="Usuário" required autofocus>
+  <input type="text" id="usuario" th:field="*{usuario}" class="form-control" placeholder="Usuário" required disabled>
   <label th:if="${#fields.hasErrors('usuario')}" th:errors="*{usuario}">User Error</label>
   <label for="senha" class="sr-only">Senha</label>
   <input type="password" id="senha" name="senha" th:field="*{senha}" class="form-control" placeholder="Senha" onkeyup='check_pass();' required>

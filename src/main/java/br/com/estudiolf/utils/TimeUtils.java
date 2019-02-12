@@ -9,6 +9,7 @@ public class TimeUtils {
 	public SimpleDateFormat sdfDate = new SimpleDateFormat("dd/MM/yyyy");
 	public SimpleDateFormat interDate = new SimpleDateFormat("yyyy-MM-dd");
 	public SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm");
+	private Date date;
 
 	public TimeUtils() {
 		sdfDate.setTimeZone(TimeZone.getTimeZone("America/Sao_Paulo"));
@@ -16,6 +17,7 @@ public class TimeUtils {
 	}
 
 	public Date getTime() {
-		return new Date();
+		date = new Date();
+		return date;
 	}
 }
