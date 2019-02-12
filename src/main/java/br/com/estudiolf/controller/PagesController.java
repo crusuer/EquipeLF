@@ -180,7 +180,7 @@ public class PagesController {
 			resumo.setNome(m.getNome());
 
 			Iterable<Ponto> pontos = pontoRepository.findByUsuarioAndDia(m, dia);
-			int minutos = 0;
+			long minutos = 0;
 			for (Ponto p : pontos) {
 				try {
 					if (!p.getTotal().isEmpty()) {
