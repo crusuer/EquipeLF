@@ -20,7 +20,7 @@ public class Resumo {
 	public void setTotal(String total) {
 		this.total = total;
 	}
-
+	
 	public int getEventos() {
 		return eventos;
 	}

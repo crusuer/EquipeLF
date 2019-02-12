@@ -62,7 +62,7 @@
 							</tr>
 						</thead>
 						<tr th:each="membro : ${membros}">
-							<td><a th:href="@{/admin/marcacoes(name=${membro.nome})}" th:text="${membro.nome}"></a></td>
+							<td><a th:href="@{/admin/marcacoes(nome=${membro.nome})}" th:text="${membro.nome}"></a></td>
 							<td th:text="${membro.usuario}"></td>
 							<td><a class="btn btn-sm btn-primary"
 								th:href="@{/admin/usuarios/del/{usuario}(usuario=${membro.usuario})}">Desabilitar</a>
