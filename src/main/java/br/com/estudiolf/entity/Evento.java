@@ -13,7 +13,7 @@ import javax.persistence.UniqueConstraint;
 @Table(name = "Baile", //
 		uniqueConstraints = { //
 				@UniqueConstraint(name = "BAILE_UK", columnNames = { "usuario", "dia" }) })
-public class Baile {
+public class Evento {
 
 	@Id
 	@GeneratedValue
