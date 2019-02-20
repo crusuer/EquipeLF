@@ -81,11 +81,12 @@
 							<td th:text="${ponto.fim}"></td>
 							<td th:text="${ponto.total}"></td>
 							<td><a class="btn btn-sm btn-primary"
-								th:href="@{/admin/marcacoes/edit/{id}(id=${ponto.id})}">Editar</a>
+								th:href="@{/admin/marcacoes/edit(id=${ponto.id}, nome=${nome})}">Editar</a>
 							</td>
 						</tr>
-					</table>
+					</table>					
 				</div>
+				<a class="btn btn-info" th:href="@{/admin/marcacoes/edit(id=0,nome=${nome})}">Incluir</a>
 			</div>
 		</div>
 	</div>

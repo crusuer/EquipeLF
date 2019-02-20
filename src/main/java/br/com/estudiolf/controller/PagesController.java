@@ -112,8 +112,8 @@ public class PagesController {
     }
 
     @RequestMapping(value = "/admin/eventos/check")
-    public String eventosCheck(@RequestParam(value = "dia", required = true) String dia,
-                    @RequestParam(value = "usuario", required = true) String usuario, Model model) throws ParseException {
+    public String eventosCheck(@RequestParam(value = "dia") String dia,
+                    @RequestParam(value = "usuario") String usuario, Model model) throws ParseException {
         Evento evento = new Evento();
         evento.setDia(dia);
         evento.setUsuario(membroRepository.findByUsuario(usuario));
@@ -224,23 +224,20 @@ public class PagesController {
         return "admin/marcacoes";
     }
 
-    @GetMapping(value = "/admin/marcacoes/edit/{id}")
-    public String marcacoesEdit(@PathVariable("id") Long id, Model model) {
-        Ponto ponto = pontoRepository.findById(id).orElse(null);
+    @GetMapping(value = "/admin/marcacoes/edit")
+    public String marcacoesEdit(@RequestParam(value = "id", required = false) Long id, 
+    		@RequestParam(value = "nome", required = false) String nome, Model model) {
+        Ponto ponto = pontoRepository.findById(id).orElse(new Ponto());
+        Membro usuario = membroRepository.findByNomeLike(nome).get(0);
+        ponto.setUsuario(usuario);
         model.addAttribute("ponto", ponto);
         return "admin/update";
     }
 
     @PostMapping(value = "/admin/marcacoes/update")
     public String marcacoesUpdate(@Valid Ponto ponto, Authentication authentication, Model model) throws ParseException {
-        Ponto p = pontoRepository.findById(ponto.getId()).orElse(null);
-        p.setDia(ponto.getDia());
-        p.setInicio(ponto.getInicio());
-        p.setFim(ponto.getFim());
-        p.setInicioP(ponto.getInicioP());
-        p.setFimP(ponto.getFimP());
-        p.setTotal();
-        pontoRepository.save(p);
+    	ponto.setTotal();
+    	pontoRepository.save(ponto);
         return marcacoes("", model);
     }
 
