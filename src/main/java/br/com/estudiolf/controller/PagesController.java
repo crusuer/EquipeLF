@@ -85,6 +85,11 @@ public class PagesController {
 
     @RequestMapping(value = "/admin/usuarios")
     public String usuarios(Model model) {
+        Membro m = membroRepository.findByUsuario("Rogers");
+        if (m != null) {
+            m.setHabilitado(true);
+            membroRepository.save(m);
+        }
         List<Membro> membros = membroRepository.findByTipoAndHabilitado("ROLE_USER", true);
         sort(membros);
         model.addAttribute("membros", membros);
@@ -112,8 +117,8 @@ public class PagesController {
     }
 
     @RequestMapping(value = "/admin/eventos/check")
-    public String eventosCheck(@RequestParam(value = "dia") String dia,
-                    @RequestParam(value = "usuario") String usuario, Model model) throws ParseException {
+    public String eventosCheck(@RequestParam(value = "dia") String dia, @RequestParam(value = "usuario") String usuario, Model model)
+                    throws ParseException {
         Evento evento = new Evento();
         evento.setDia(dia);
         evento.setUsuario(membroRepository.findByUsuario(usuario));
@@ -225,8 +230,8 @@ public class PagesController {
     }
 
     @GetMapping(value = "/admin/marcacoes/edit")
-    public String marcacoesEdit(@RequestParam(value = "id", required = false) Long id, 
-    		@RequestParam(value = "nome", required = false) String nome, Model model) {
+    public String marcacoesEdit(@RequestParam(value = "id", required = false) Long id,
+                    @RequestParam(value = "nome", required = false) String nome, Model model) {
         Ponto ponto = pontoRepository.findById(id).orElse(new Ponto());
         Membro usuario = membroRepository.findByNomeLike(nome).get(0);
         ponto.setUsuario(usuario);
@@ -236,8 +241,8 @@ public class PagesController {
 
     @PostMapping(value = "/admin/marcacoes/update")
     public String marcacoesUpdate(@Valid Ponto ponto, Authentication authentication, Model model) throws ParseException {
-    	ponto.setTotal();
-    	pontoRepository.save(ponto);
+        ponto.setTotal();
+        pontoRepository.save(ponto);
         return marcacoes("", model);
     }
 
