@@ -65,7 +65,7 @@
 							<td><a th:href="@{/admin/marcacoes(nome=${membro.nome})}" th:text="${membro.nome}"></a></td>
 							<td th:text="${membro.usuario}"></td>
 							<td><a class="btn btn-sm btn-danger"
-								th:href="@{/admin/usuarios/del/{usuario}(usuario=${membro.usuario})}">Desabilitar</a>
+								th:href="@{/admin/usuarios/del/{usuario}(usuario=${membro.usuario})}" onclick="return confirm('Tem certeza que quer desabilitar o usuario?')">Desabilitar</a>
 							</td>
 						</tr>
 					</table>
