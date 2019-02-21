@@ -85,11 +85,6 @@ public class PagesController {
 
     @RequestMapping(value = "/admin/usuarios")
     public String usuarios(Model model) {
-        Membro m = membroRepository.findByUsuario("Rogers");
-        if (m != null) {
-            m.setHabilitado(true);
-            membroRepository.save(m);
-        }
         List<Membro> membros = membroRepository.findByTipoAndHabilitado("ROLE_USER", true);
         sort(membros);
         model.addAttribute("membros", membros);
