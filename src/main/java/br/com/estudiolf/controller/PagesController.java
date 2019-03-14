@@ -48,15 +48,7 @@ public class PagesController {
     private PasswordEncoder passwordEncoder;
 
     @RequestMapping("/")
-    public String index(Model model, Authentication authentication, HttpServletRequest request) {
-    	String remoteAddr = "";
-        if (request != null) {
-            remoteAddr = request.getHeader("X-FORWARDED-FOR");
-            if (remoteAddr == null || "".equals(remoteAddr)) {
-                remoteAddr = request.getRemoteAddr();
-            }
-        }
-        model.addAttribute("ip", remoteAddr);
+    public String index() {    	
         return "index";
     }
 
@@ -87,7 +79,15 @@ public class PagesController {
     }
 
     @RequestMapping(value = "/admin")
-    public String admin() {
+    public String admin(Model model, Authentication authentication, HttpServletRequest request) {
+        String remoteAddr = "";
+        if (request != null) {
+            remoteAddr = request.getHeader("X-FORWARDED-FOR");
+            if (remoteAddr == null || "".equals(remoteAddr)) {
+                remoteAddr = request.getRemoteAddr();
+            }
+        }
+        model.addAttribute("ip", remoteAddr);
         return "admin/admin";
     }
 
