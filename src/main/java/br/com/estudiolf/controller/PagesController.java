@@ -271,7 +271,7 @@ public class PagesController {
             }
         }
 
-        if (remoteAddr.equals("189.54.147.218")) {
+        if (remoteAddr.equals("201.74.8.64")) {
             String dia = timeUtils.sdfDate.format(timeUtils.getTime());
             Iterable<Ponto> ponto = pontoRepository.findByUsuarioAndDia(membroRepository.findByUsuario(authentication.getName()), dia);
             boolean check = true;
