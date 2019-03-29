@@ -4,7 +4,9 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -46,7 +48,25 @@ public class PagesController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    
+    Map<Integer, String> meses = new HashMap<Integer, String>();
 
+    public PagesController() {
+    	meses.put(0, "");
+    	meses.put(1, "Janeiro");
+    	meses.put(2, "Fevereiro");
+    	meses.put(3, "Março");
+    	meses.put(4, "Abril");
+    	meses.put(5, "Maio");
+    	meses.put(6, "Junho");
+    	meses.put(7, "Julho");
+    	meses.put(8, "Agosto");
+    	meses.put(9, "Setembro");
+    	meses.put(10, "Outubro");
+    	meses.put(11, "Novembro");
+    	meses.put(12, "Dezembro");
+    }
+    
     @RequestMapping("/")
     public String index() {    	
         return "index";
@@ -132,13 +152,13 @@ public class PagesController {
     }
 
     @RequestMapping(value = "/admin/relatorios/mensal")
-    public String relatorioMensal(@RequestParam(value = "mes", required = false, defaultValue = "01") String mes, Model model) {
+    public String relatorioMensal(@RequestParam(value = "mes", required = false, defaultValue = "00") int mes, Model model) {
         List<Resumo> resumos = new ArrayList<>();
         List<Membro> membros = membroRepository.findByTipoAndHabilitado("ROLE_USER", true);
         sort(membros);
 
-        String dia = "__/" + mes + timeUtils.sdfDate.format(timeUtils.getTime()).substring(5);
-        String diaEvento = timeUtils.interDate.format(timeUtils.getTime()).substring(0, 5) + mes + "-__";
+        String dia = "__/" + String.format("%02d", mes) + timeUtils.sdfDate.format(timeUtils.getTime()).substring(5);
+        String diaEvento = timeUtils.interDate.format(timeUtils.getTime()).substring(0, 5) + String.format("%02d", mes) + "-__";
         for (Membro m : membros) {
             Resumo resumo = new Resumo();
             resumo.setNome(m.getNome());
@@ -168,7 +188,8 @@ public class PagesController {
 
             resumos.add(resumo);
         }
-
+        model.addAttribute("mes",mes);
+        model.addAttribute("meses", meses);
         model.addAttribute("resumos", resumos);
         return "admin/mensal";
     }
@@ -216,7 +237,7 @@ public class PagesController {
     }
 
     @RequestMapping(value = "/admin/marcacoes")
-    public String marcacoes(@RequestParam(value = "nome", required = false) String nome, Model model) {
+    public String marcacoes(@RequestParam(value = "nome", required = false) String nome, @RequestParam(value = "mes", required = false) Integer mes, Model model) {
         Iterable<Ponto> pontos = new ArrayList<>();
         if (nome != null && !nome.isEmpty()) {
             nome = nome.toUpperCase();
@@ -224,6 +245,9 @@ public class PagesController {
             List<Membro> m = membroRepository.findByNomeLike(nome + "%");
             if (m != null && !m.isEmpty()) {
                 String dia = "__" + timeUtils.sdfDate.format(timeUtils.getTime()).substring(2);
+                if(mes != null) {
+                	dia = "__/" + String.format("%02d", mes) + timeUtils.sdfDate.format(timeUtils.getTime()).substring(5);
+                }
                 pontos = pontoRepository.findByUsuarioAndDia(m.get(0), dia);
                 model.addAttribute("nome", m.get(0).getNome());
             }
@@ -246,7 +270,7 @@ public class PagesController {
     public String marcacoesUpdate(@Valid Ponto ponto, Authentication authentication, Model model) throws ParseException {
         ponto.setTotal();
         pontoRepository.save(ponto);
-        return marcacoes("", model);
+        return marcacoes("", null, model);
     }
 
     @GetMapping("/user")

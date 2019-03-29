@@ -53,20 +53,8 @@
 				<br>
 				<h1 class="mt-5">Relat&oacute;rio Mensal</h1>
 				<form class="form-group" th:action="@{/admin/relatorios/mensal}" method="POST">
-					<select id="mes" name="mes" class="form-control" onchange="this.form.submit()">
-						<option value="01">Janeiro</option>
-						<option value="02">Fevereiro</option>
-						<option value="03">Mar&ccedil;o</option>
-						<option value="04">Abril</option>
-						<option value="05">Maio</option>
-						<option value="06">Junho</option>
-						<option value="07">Julho</option>
-						<option value="08">Agosto</option>
-						<option value="09">Setembro</option>
-						<option value="10">Outubro</option>
-						<option value="11">Novembro</option>
-						<option value="12">Dezembro</option>
-						<option selected>
+					<select class="form-control" id="mes" name="mes" onchange="this.form.submit()">
+						<option th:each="entry : ${meses.entrySet()}" th:value="${entry.key}" th:text="${entry.value}"></option>
 					</select>
 				</form>
 				<div class="table-responsive">
@@ -79,7 +67,7 @@
 							</tr>
 						</thead>
 						<tr th:each="resumo : ${resumos}">
-							<td th:text="${resumo.nome}"></td>
+							<td> <a th:href="@{/admin/marcacoes(nome=${resumo.nome},mes=${mes})}" th:text="${resumo.nome}"></a></td>
 							<td th:text="${resumo.total}"></td>
 							<td th:text="${resumo.eventos}"></td>
 						</tr>
