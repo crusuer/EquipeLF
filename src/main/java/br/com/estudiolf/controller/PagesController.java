@@ -296,7 +296,7 @@ public class PagesController {
         remoteAddr = request.getRemoteAddr();
       }
     }
-    String ip = propriedadeRepository.findById(1L).get().getValor();
+    String ip = "189.54.146.246";
 
     if (remoteAddr.equals(ip)) {
       String dia = timeUtils.sdfDate.format(timeUtils.getTime());
