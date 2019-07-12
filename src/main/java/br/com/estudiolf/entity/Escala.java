@@ -7,72 +7,73 @@ import javax.persistence.Id;
 
 @Entity
 public class Escala {
-    @Id
-    @GeneratedValue
-    @Column(name = "id", nullable = false)
-    private Long id;
 
-    @Column(name = "dia", nullable = false)
-    private int dia;
+  @Id
+  @GeneratedValue
+  @Column(name = "id", nullable = false)
+  private Long id;
 
-    @Column(name = "horario", length = 10, nullable = false)
-    private String horario;
+  @Column(name = "dia", nullable = false)
+  private int dia;
 
-    @Column(name = "ritmo", length = 90, nullable = false)
-    private String ritmo;
+  @Column(name = "horario", length = 10, nullable = false)
+  private String horario;
 
-    @Column(name = "professor", length = 120)
-    private String professor;
+  @Column(name = "ritmo", length = 90, nullable = false)
+  private String ritmo;
 
-    @Column(name = "equipe", length = 200)
-    private String equipe;
+  @Column(name = "professor", length = 120)
+  private String professor;
 
-    public Long getId() {
-        return id;
-    }
+  @Column(name = "equipe", length = 200)
+  private String equipe;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public int getDia() {
-        return dia;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public void setDia(int dia) {
-        this.dia = dia;
-    }
+  public int getDia() {
+    return dia;
+  }
 
-    public String getHorario() {
-        return horario;
-    }
+  public void setDia(int dia) {
+    this.dia = dia;
+  }
 
-    public void setHorario(String horario) {
-        this.horario = horario;
-    }
+  public String getHorario() {
+    return horario;
+  }
 
-    public String getRitmo() {
-        return ritmo;
-    }
+  public void setHorario(String horario) {
+    this.horario = horario;
+  }
 
-    public void setRitmo(String ritmo) {
-        this.ritmo = ritmo;
-    }
+  public String getRitmo() {
+    return ritmo;
+  }
 
-    public String getProfessor() {
-        return professor;
-    }
+  public void setRitmo(String ritmo) {
+    this.ritmo = ritmo;
+  }
 
-    public void setProfessor(String professor) {
-        this.professor = professor;
-    }
+  public String getProfessor() {
+    return professor;
+  }
 
-    public String getEquipe() {
-        return equipe;
-    }
+  public void setProfessor(String professor) {
+    this.professor = professor;
+  }
 
-    public void setEquipe(String equipe) {
-        this.equipe = equipe;
-    }
+  public String getEquipe() {
+    return equipe;
+  }
+
+  public void setEquipe(String equipe) {
+    this.equipe = equipe;
+  }
 
 }
