@@ -3,6 +3,7 @@ package br.com.estudiolf.controller;
 import br.com.estudiolf.entity.Evento;
 import br.com.estudiolf.entity.Membro;
 import br.com.estudiolf.entity.Ponto;
+import br.com.estudiolf.entity.Propriedade;
 import br.com.estudiolf.entity.Resumo;
 import br.com.estudiolf.repository.EventoRepository;
 import br.com.estudiolf.repository.MembroRepository;
@@ -116,6 +117,22 @@ public class PagesController {
     sort(membros);
     model.addAttribute("membros", membros);
     return "admin/usuarios";
+  }
+
+  @PostMapping(value = "/atualizaIP")
+  public String atualizaIP(Model model, Authentication authentication, HttpServletRequest request) {
+    String remoteAddr = "";
+    if (request != null) {
+      remoteAddr = request.getHeader("X-FORWARDED-FOR");
+      if (remoteAddr == null || "".equals(remoteAddr)) {
+        remoteAddr = request.getRemoteAddr();
+      }
+    }
+    Propriedade propriedade = new Propriedade();
+    propriedade.setId(1L);
+    propriedade.setValor(remoteAddr);
+    propriedadeRepository.save(propriedade);
+    return "admin/admin";
   }
 
   @GetMapping("/admin/usuarios/del/{usuario}")
@@ -296,7 +313,7 @@ public class PagesController {
         remoteAddr = request.getRemoteAddr();
       }
     }
-    String ip = "189.54.146.246";
+    String ip = propriedadeRepository.findById(1L).get().getValor();
 
     if (remoteAddr.equals(ip)) {
       String dia = timeUtils.sdfDate.format(timeUtils.getTime());

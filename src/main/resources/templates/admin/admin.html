@@ -61,6 +61,9 @@
 			<div class="col-lg-12 text-center">
 				<br>
 				<h1 class="mt-5">Sistema Administrativo</h1>
+				<form th:action="@{/atualizaIP}" method="post">
+					<button class="btn btn-lg btn-primary btn-block" name="action" th:value='Atualizar'>Atualizar IP</button>
+				</form>
 				<p th:if="${ip}" th:text="${ip}"></p>
 			</div>
 		</div>

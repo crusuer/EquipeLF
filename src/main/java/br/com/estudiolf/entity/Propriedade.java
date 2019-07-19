@@ -9,15 +9,15 @@ public class Propriedade {
 
   @Id
   @Column
-  private int id;
+  private Long id;
   @Column
   private String valor;
 
-  public int getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(int id) {
+  public void setId(Long id) {
     this.id = id;
   }
 
