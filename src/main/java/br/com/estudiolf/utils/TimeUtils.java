@@ -11,8 +11,8 @@ public class TimeUtils {
   public SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm");
 
   public TimeUtils() {
-    sdfDate.setTimeZone(TimeZone.getTimeZone("America/Sao_Paulo"));
-    sdfTime.setTimeZone(TimeZone.getTimeZone("America/Sao_Paulo"));
+    sdfDate.setTimeZone(TimeZone.getTimeZone("GMT-03:00"));
+    sdfTime.setTimeZone(TimeZone.getTimeZone("GMT-03:00"));
   }
 
   public Date getTime() {
